@@ -3,9 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEBSITE</title>
+    <title>Data Analysis Portfolio</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h1>Pedro Papp</h1>
+    <header>
+        <h1>Data Analysis Portfolio</h1>
+    </header>
+
+    <section class="intro">
+        <h2>Welcome</h2>
+        <p>Hello! I'm Pedro Papp, a passionate data analyst. Welcome to my professional portfolio webpage.</p>
+    </section>
+
+    <section class="about">
+        <h2>About Me</h2>
+        <p>I have a Master's degree in Data Science and over X years of experience in data analysis. I am skilled in translating data into actionable insights and making data-driven decisions.</p>
+    </section>
+
+    <section class="projects">
+        <h2>Projects</h2>
+        <div class="project">
+            <h3>Project Title 1</h3>
+            <p>Description of what the project was about, what tools were used, the outcome, etc.</p>
+        </div>
+        <div class="project">
+            <h3>Project Title 2</h3>
+            <p>Description of what the project was about, what tools were used, the outcome, etc.</p>
+        </div>
+        <!-- Add more projects as needed -->
+    </section>
+
+    <section class="skills">
+        <h2>Skills</h2>
+        <div class="skill">Python</div>
+        <div class="skill">R</div>
+        <div class="skill">SQL</div>
+        <div class="skill">PowerBI</div>
+        <div class="skill">Excel</div>
+        <!-- Add more skills as needed -->
+    </section>
+
+    <section class="contact">
+        <h2>Contact Me</h2>
+        <p>You can reach me at:</p>
+        <div class="contact-item">LinkedIn: <a href="https://www.linkedin.com/in/pedropapp/">linkedin</a></div>
+        <div class="contact-item">Email: <a href="mailto:pedropapp15@gmail.com">Pedropapp15@gmail.com</a></div>
+        <div class="contact-item">Phone: (123) 456-7890</div>
+    </section>
+
+    <footer>
+        <p>©2024 by Pedro Papp.</p>
+    </footer>
+
+    <script>
+        // Example of JavaScript for dynamic interaction enhancement
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>

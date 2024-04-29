@@ -1,0 +1,106 @@
+  /* Basic Reset */
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Header Styles */
+header {
+    background-color: #348c8b;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navigation Styles */
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ffdd40;
+}
+
+/* Section Styling */
+section {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+section:hover {
+    transform: translateY(-5px);
+}
+
+/* Project and Skill Item Styling */
+.project, .skill {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.project:hover, .skill:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #0056b3;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav ul {
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
