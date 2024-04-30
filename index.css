@@ -61,8 +61,7 @@ section:hover {
 
 .intro, .about {
 width: 63%;
-background-color: rgba(11, 65, 22, 0.656);
-color:#ddd;
+background-color: rgba(209, 212, 210, 0.656);
 
 }
 .image {
@@ -75,15 +74,20 @@ color:#ddd;
     transition: transform 0.3s ease-in-out;
     padding: 20px;
 }
-
-/* Project and Skill Item Styling */
-.project {
-    background: white;
+.projects {
+   background-color: rgba(0, 0, 0, 0);
+}
+.project{
+    background: rgba(209, 212, 210, 0.656);
     border: 1px solid #ddd;
     padding: 10px;
+    margin-bottom: 10px;
     border-radius: 5px;
     transition: box-shadow 0.3s ease-in-out;
     width: fit-content;
+}
+.text {
+    width: 70%;
 }
 .skill {
     background: white;
