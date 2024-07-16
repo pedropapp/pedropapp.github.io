@@ -1,117 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Pedro Papp - Portfolio</title>
     <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script defer src="main.js"></script>
 </head>
-
-<body style="background-color:rgb(3, 5, 5);">
+<body>
     <header>
-        <h1>Pedro Papp</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
     </header>
-    <div>
-        <IMG class="image" SRC="./assets/_DSC0477.jpg">
-        <section class="intro">
-            <h2>Welcome</h2>
-            <p>Business student in my final semester with a focus on Data Analytics and an international
-                background, I have lived in Curitiba, London, Lisbon, Cologne and now Montreal. In every role and on
-                every project, I bring a blend of logical reasoning, analysis, and curiosity which enables me to
-                locate pain points and develop improvements.
-            <p> I am driven by feedback, whether from clients, team members or managers and value open communication,
-                which I have found crucial in bridging cultural differences and working and volunteering in different
-                environments and on
-                varied initiatives.</p>
-            <P>My studies have allowed me to focus on key areas, such as Sustainable transformation, Data modelling,
-                Statistics and Market research. Brining my curiosity to every project and position where I am
-                involved, I am looking to work in an environment where I can use to data to better understand
-                complex processes and make decisions to affect growth and positive change.</p>
-        </section>
-        <section class="about">
-            <h2>About Me</h2>
-            <p>I have a bachelor's degree in business administration.</p>
-            <p>I have a bachelor's degree in business administration.</p>
-            <p>I have a bachelor's degree in business administration.</p>
-            <p>I have a bachelor's degree in business administration.</p>
-        </section>
-    </div>
-    <section class="projects">
-        <div class="project">
-            <h2>Projects</h2>
-            <h3>My Life in music</h3>
-            <p class="text">In this personal project I used Tableau to vizualize all my spotify data over the last 9
-                years. I was always intrigued by the spotify wrapped, yet i wanted to know more about my listening
-                habits over time and how it differs in each of the countries that i have lived. one of the most
-                interesting aspects I observed was the astounding total time in each country. this project greatly
-                inspired me to continue to learn more about data analysis and visualization tools. </p>
-            </p>
-            <div class='tableauPlaceholder' id='viz1714434117820' style='position: relative'><noscript><a href='#'><img
-                            alt='Dashboard 1 '
-                            src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;99&#47;99PT8CGZN&#47;1_rss.png'
-                            style='border: none' /></a></noscript><object class='tableauViz' style='display:none;'>
-                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
-                    <param name='embed_code_version' value='3' />
-                    <param name='path' value='shared&#47;99PT8CGZN' />
-                    <param name='toolbar' value='yes' />
-                    <param name='static_image'
-                        value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;99&#47;99PT8CGZN&#47;1.png' />
-                    <param name='animate_transition' value='yes' />
-                    <param name='display_static_image' value='yes' />
-                    <param name='display_spinner' value='yes' />
-                    <param name='display_overlay' value='yes' />
-                    <param name='display_count' value='yes' />
-                    <param name='language' value='en-GB' />
-                </object></div>
-            <script
-                type='text/javascript'>                    var divElement = document.getElementById('viz1714434117820'); var vizElement = divElement.getElementsByTagName('object')[0]; if (divElement.offsetWidth > 800) { vizElement.style.width = '1000px'; vizElement.style.height = '827px'; } else if (divElement.offsetWidth > 500) { vizElement.style.width = '1000px'; vizElement.style.height = '827px'; } else { vizElement.style.width = '100%'; vizElement.style.height = '1427px'; } var scriptElement = document.createElement('script'); scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js'; vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
-        </div>
-        <div class="project">
-            <h3>Project Title 2</h3>
-            <p>Description of what the project was about, what tools were used, the outcome, etc.</p>
-            <IMG SRC="./assets/visuwpm5.gif">
-        </div>
-        <!-- Add more projects as needed -->
-    </section>
 
-    <section class="skills">
-        <h2>Skills</h2>
-        <div class="skill">Python</div>
-        <div class="skill">IBM SPSS</div>
-        <div class="skill">JavaScript</div>
-        <div class="skill">HTML</div>
-        <div class="skill">Tableau/PowerBI</div>
-        <div class="skill">Excel</div>
-        <div class="skill">Google Analytics</div>
-        <div class="skill">Access</div>
-        <!-- Add more skills as needed -->
-    </section>
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-background"></div>
+            <div class="hero-content">
+                <img src="/assets/_DSC0477 copy.jpg" alt="Pedro Papp" class="hero-image">
+                <div class="hero-text">
+                    <h1>Pedro Papp</h1>
+                    <p>Business Student | Data Analytics Enthusiast</p>
+                </div>
+            </div>
+        </section>
 
-    <section class="contact">
-        <h2>Contact Me</h2>
-        <p>You can reach me at:</p>
-        <div class="contact-item">LinkedIn: <a href="https://www.linkedin.com/in/pedropapp/">linkedin</a></div>
-        <div class="contact-item">✉️: <a href="mailto:pedropapp15@gmail.com">Pedropapp15@gmail.com</a></div>
-        <div class="contact-item">GitHub: <a href="https://github.com/pedropapp">github</a></div>
-        <div class="contact-item">Phone: -</div>
-    </section>
+        <section id="about" class="about">
+            <div class="container">
+                <h2 data-aos="fade-up">About Me</h2>
+                <div class="about-content" data-aos="fade-up" data-aos-delay="100">
+                    <div class="about-text">
+                        <p>
+                            I have lived in Curitiba, London, Lisbon, Cologne and Montreal. In every role and on every project, I bring a blend of logical reasoning, analysis, and curiosity which enables me to locate pain points and develop improvements. I am driven by feedback, whether from clients, team members or managers and value open communication, which I have found crucial in bridging cultural differences and working and volunteering in different environments and on varied initiatives.
+                        </p>
+                        <br>
+                        <p>
+                        My studies and work have allowed me to focus on key areas, such as Sustainable transformation, Data modelling, Statistics, Programming, Market research, SEO and Artificial Intelligence. Bringing my curiosity to every project and every position, I am looking to work in an environment where I can use data to better understand complex processes and make decisions to affect growth and positive change.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2 data-aos="fade-up">Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                        <h3>My Life in Music</h3>
+                        <p>Visualized 9 years of Spotify data using Tableau, analyzing listening habits across different countries.</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Project Title 2</h3>
+                        <p>Description of what the project was about, what tools were used, the outcome, etc.</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <!-- Add more project cards as needed -->
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="skills">
+            <div class="container">
+                <h2 data-aos="fade-up">Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="100">Python</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="300">MEAN Stack</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="800">Azure</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="400">IBM SPSS</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="500">Tableau/PowerBI</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="600">Excel</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="700">Google Analytics</div>
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="800">Access</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 data-aos="fade-up">Contact Me</h2>
+                <div class="contact-grid">
+                    <a href="https://www.linkedin.com/in/pedropapp/" class="contact-item" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fab fa-linkedin"></i>  LinkedIn
+                    </a>
+                    <a href="mailto:pedropapp15@gmail.com" class="contact-item" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-envelope"></i>  Email
+                    </a>
+                    <a href="https://github.com/pedropapp" class="contact-item" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fab fa-github"></i>  GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <p>©2024 by Pedro Papp</p>
+        <p>&copy; 2024 Pedro Papp</p>
     </footer>
 
-    <script>
-        // Example of JavaScript for dynamic interaction enhancement
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
 </body>
-
 </html>
