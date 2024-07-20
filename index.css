@@ -1,12 +1,12 @@
 /* Modern Portfolio CSS */
 
 :root {
-    --primary-color: #1a936f;
-    --secondary-color: #88d498;
-    --text-color: #333;
-    --background-color: #f6f9fc;
-    --card-background: #ffffff;
-    --hero-text-color: #2e2e2e;
+    --primary-color: #1a1a1a;
+    --secondary-color: #2c2c2c;
+    --text-color: #e0e0e0;
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --hero-text-color: #ffffff;
 }
 
 * {
@@ -53,7 +53,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -63,10 +63,23 @@ nav ul li a {
 
 nav ul li a:hover {
     background-color: var(--secondary-color);
-    color: var(--primary-color);
+    color: var(--text-color);
 }
 
 /* Hero Section */
+
+#spline-viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 80px);  /* Increase the height */
+    z-index: 1;
+    overflow: hidden;  /* Hide overflow */
+}
+
+
+
 .hero {
     height: 100vh;
     position: relative;
@@ -79,10 +92,25 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/assets/background3.gif');
+    background-image: url('https://my.spline.design/trails-7d91e66498bcc655c4079d73aae0825b/');
     background-size: cover;
     background-position: center;
     filter: brightness(70%) saturate(120%) hue-rotate(10deg);
+    animation: slowZoom 30s ease-in-out infinite alternate;
+}
+.hero-background::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 150px;  /* Adjust as needed */
+    height: 120px;  /* Adjust as needed */
+    background: linear-gradient(to bottom right, transparent, var(--background-color));
+    z-index: 2;
+}
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
 }
 
 .hero-background::after {
@@ -92,32 +120,46 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
 }
 
 .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 0 20px;
+    color: #ffffff;
+    text-align: center;
 }
 
 .hero-image {
-    width: 300px;
-    height: 300px;
+    width: 200px;  /* Reduced from 300px */
+    height: 200px;  /* Reduced from 300px */
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid var(--secondary-color);
-    box-shadow: 0 0 20px rgba(39, 174, 96, 0.3);
-    transition: transform 0.3s ease;
+    border: 2px solid var(--secondary-color);  /* Reduced border width */
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.2);  /* Reduced shadow */
+    margin-bottom: 20px;
+    opacity: 1;  /* Slightly reduce opacity to make it less intrusive */
 }
 
+/* Remove the hover effect */
 .hero-image:hover {
-    transform: scale(1.05);
+    transform: none;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
 }
 
 .hero-text {
@@ -129,7 +171,7 @@ nav ul li a:hover {
     font-size: 4rem;
     margin-bottom: 1rem;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(210, 198, 198, 0.551);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     font-weight: 600;
 }
 
@@ -137,7 +179,7 @@ nav ul li a:hover {
     font-size: 1.8rem;
     max-width: 600px;
     font-weight: 300;
-    text-shadow: 1px 1px 2px  rgba(210, 198, 198, 0.551);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Add a gradient overlay */
@@ -149,8 +191,8 @@ nav ul li a:hover {
     right: 0;
     bottom: 0;
     background: linear-gradient(135deg, 
-                rgba(26, 147, 111, 0.7), 
-                rgba(136, 212, 152, 0.3));
+                rgba(26, 26, 26, 0.7), 
+                rgba(44, 44, 44, 0.3));
     z-index: 1;
 }
 
@@ -160,7 +202,7 @@ section {
 }
 
 section:nth-child(even) {
-    background-color: #f0f7f4;
+    background-color: #1a1a1a;
 }
 
 /* About Section */
@@ -187,7 +229,7 @@ section:nth-child(even) {
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #333;
 }
 
 .project-card:hover {
@@ -201,7 +243,7 @@ section:nth-child(even) {
 
 .btn {
     display: inline-block;
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -210,7 +252,7 @@ section:nth-child(even) {
 }
 
 .btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 /* Skills Section */
@@ -227,6 +269,7 @@ section:nth-child(even) {
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    color: var(--text-color);
 }
 
 .skill-item:hover {
