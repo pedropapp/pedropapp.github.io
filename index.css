@@ -263,14 +263,21 @@ section:nth-child(even) {
 }
 
 .skill-item {
-    background-color: var(--card-background);
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    align-items: center;
+    gap: 10px;
     padding: 1rem;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    color: var(--text-color);
+    background-color: var(--card-background);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
 }
+
+.skill-item i {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
 
 .skill-item:hover {
     transform: translateY(-3px);
@@ -285,16 +292,24 @@ section:nth-child(even) {
 }
 
 .contact-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 30px 1fr;
     align-items: center;
-    justify-content: center;
-    background-color: var(--card-background);
+    gap: 5px;
     padding: 1rem;
+    background-color: var(--card-background);
     border-radius: 5px;
     text-decoration: none;
     color: var(--text-color);
     transition: transform 0.3s ease;
 }
+
+.contact-item i {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+
 
 .contact-item:hover {
     transform: translateY(-3px);
@@ -352,4 +367,82 @@ footer {
     nav ul li {
         margin: 10px 0;
     }
+}
+/* Add this to your existing CSS */
+
+.about-text p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;  /* Increased from 1rem for more space */
+    color: grey;
+}
+
+.btn {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.skill-item {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+}
+
+.skill-item i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+h2 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+h2 i, 
+.about-text i,
+.skill-item i {
+    margin-right: 0.75rem;  /* Increased from 0.5rem for more space */
+}
+.btn i {
+    margin-right: 0.5rem;
+}
+i.fas, i.fab {
+    margin-right: 10px;
+    padding-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+i + * {
+    margin-left: 0.5rem; /* Adds space after any icon that's followed by another element */
 }
