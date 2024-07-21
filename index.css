@@ -1,5 +1,84 @@
 /* Modern Portfolio CSS */
 
+/* MOBILE */
+header {
+    background-color: #333;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links li {
+    margin: 0 1rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 2px 0;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        padding: 1rem;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0.5rem 0;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+/* MOBILE */
 :root {
     --primary-color: #1a1a1a;
     --secondary-color: #2c2c2c;
@@ -89,7 +168,7 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://my.spline.design/trails-7d91e66498bcc655c4079d73aae0825b/');
+    background-image: url('https://app.spline.design/file/aa6f105b-b16e-4416-aeb5-6a7709827b08');
     background-size: cover;
     background-position: center;
     filter: brightness(70%) saturate(120%) hue-rotate(10deg);
