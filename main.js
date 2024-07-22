@@ -1,11 +1,11 @@
 AOS.init({
-    duration: 1000,
-    once: true
-  });
+  duration: 1000,
+  once: true
+});
 
-  const hamburger = document.querySelector('.hamburger');
-  const navLinks = document.querySelector('.nav-links');
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
 
-  hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-  });
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});

@@ -8,6 +8,7 @@ header {
     width: 100%;
     top: 0;
     z-index: 1000;
+    box-sizing: border-box;
 }
 
 nav {
@@ -16,6 +17,7 @@ nav {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    position: relative; /* Add this */
 }
 
 .logo {
@@ -45,7 +47,16 @@ nav {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    position: absolute;
+    /* Add this */
+    left: 1rem;
+    /* Add this */
+    top: 50%;
+    /* Add this */
+    transform: translateY(-50%);
+    /* Add this */
 }
+
 
 .hamburger span {
     width: 25px;
@@ -59,11 +70,12 @@ nav {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 60px;
         left: 0;
         width: 100%;
         background-color: #333;
-        padding: 1rem;
+        padding: 0px;
+        justify-content: center; 
+        top: 15px;
     }
 
     .nav-links.active {
@@ -72,12 +84,14 @@ nav {
 
     .nav-links li {
         margin: 0.5rem 0;
+        top: 100%;
     }
 
     .hamburger {
         display: flex;
     }
 }
+
 /* MOBILE */
 :root {
     --primary-color: #1a1a1a;
@@ -102,7 +116,9 @@ body {
     background-color: var(--background-color);
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-family: 'Poppins', sans-serif;
 }
 
@@ -161,6 +177,13 @@ nav ul li a:hover {
     position: relative;
     overflow: hidden;
 }
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Adjust as needed */
+    overflow: hidden;
+}
+
 
 .hero-background {
     position: absolute;
@@ -168,7 +191,6 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://app.spline.design/file/aa6f105b-b16e-4416-aeb5-6a7709827b08');
     background-size: cover;
     background-position: center;
     filter: brightness(70%) saturate(120%) hue-rotate(10deg);
@@ -176,11 +198,17 @@ nav ul li a:hover {
 }
 
 @keyframes slowZoom {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
 }
 
-.hero-background::before, .hero-background::after {
+.hero-background::before,
+.hero-background::after {
     content: '';
     position: absolute;
 }
@@ -214,6 +242,11 @@ nav ul li a:hover {
     padding: 0 20px;
     color: var(--hero-text-color);
     text-align: center;
+    pointer-events: none; /* Add this line */
+    
+}
+.hero-content * {
+    pointer-events: none;
 }
 
 .hero-image {
@@ -263,6 +296,12 @@ section:nth-child(even) {
 }
 
 /* About Section */
+
+.about {
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
 .about-content {
     display: flex;
     align-items: center;
@@ -329,7 +368,8 @@ section:nth-child(even) {
 }
 
 /* Skills Section */
-.skills-grid, .contact-grid {
+.skills-grid,
+.contact-grid {
     display: grid;
     gap: 1rem;
 }
@@ -342,7 +382,8 @@ section:nth-child(even) {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.skill-item, .contact-item {
+.skill-item,
+.contact-item {
     display: grid;
     grid-template-columns: 30px 1fr;
     align-items: center;
@@ -362,24 +403,29 @@ section:nth-child(even) {
     color: var(--text-color);
 }
 
-.skill-item:hover, .contact-item:hover {
+.skill-item:hover,
+.contact-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Icons */
-i.fas, i.fab {
+i.fas,
+i.fab {
     margin-right: 10px;
     padding-right: 10px;
     display: inline-block;
     vertical-align: middle;
 }
 
-h2 i, .about-text i, .skill-item i, .btn i {
+h2 i,
+.about-text i,
+.skill-item i,
+.btn i {
     margin-right: 0.75rem;
 }
 
-i + * {
+i+* {
     margin-left: 0.5rem;
 }
 
@@ -393,7 +439,9 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .about-content, .hero-content {
+
+    .about-content,
+    .hero-content {
         flex-direction: column;
         text-align: center;
     }
