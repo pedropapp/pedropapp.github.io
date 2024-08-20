@@ -472,4 +472,27 @@ footer {
     nav ul li {
         margin: 10px 0;
     }
+    
+}
+.about-map {
+    flex: 1;
+    height: 400px;
+}
+
+.leaflet-tooltip.custom-tooltip {
+    font-size: 12px;
+    padding: 5px 10px;
+    white-space: normal; /* Allow multiple lines in the tooltip */
+    word-wrap: break-word;
+    width: 250px;
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+    }
+
+    .about-map {
+        height: 300px;
+    }
 }
