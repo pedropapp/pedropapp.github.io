@@ -496,3 +496,6 @@ footer {
         height: 300px;
     }
 }
+.leaflet-control-attribution {
+    display: none !important;
+}

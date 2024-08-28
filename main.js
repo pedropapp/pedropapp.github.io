@@ -42,9 +42,9 @@ className: 'white-marker'
   var cities = [
       {name: "Curitiba", coords: [-25.4290, -49.2671], comment: "Where i grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness."},
       {name: "London", coords: [51.5074, -0.1278], comment: "Expanded my horizons during my highschool years. Studied in a prestigious school in a global city, and discovered my love for computer science, design, and exploring the world."},
-      {name: "Lisbon", coords: [38.7223, -9.1393], comment: "Started university with a goal of expanding my horizons, and participated as a Scholar atendee on WebSummit, for my two years there."},
+      {name: "Lisbon", coords: [38.7223, -9.1393], comment: "Started university with a goal of expanding my horizons, and participated as a scholar atendee on WebSummit, during my two years there."},
       {name: "Cologne", coords: [50.9375, 6.9603], comment: "Decided to continue my studies in Germany, where I worked on projects with a focus on sustainability and social impact."},
-      {name: "Montreal", coords: [45.5017, -73.5673], comment: "Currently exploring new opportunities. I'm integrating my diverse experiences into innovative projects."}
+      {name: "Montreal", coords: [45.5017, -73.5673], comment: "Ended my studies in McGill University. started working with prompt engineering and developed my web development skills."},
   ];
 
   cities.forEach(function(city) {
