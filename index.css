@@ -444,3 +444,23 @@ footer {
         height: 300px;
     }
 }
+#city-info {
+    position: absolute;
+    bottom: 70%;
+    left: 50%;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 400px;
+  }
+  .flight-path {
+    fill: none;
+    stroke: #FFD700;
+    stroke-width: 2;
+    stroke-dasharray: 4,4;
+  }
+  
+  .city-marker {
+    fill: red;
+    stroke: white;
+    stroke-width: 2;
+  } 

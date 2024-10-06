@@ -1,70 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pedro Papp - Portfolio</title>
-        <link rel="stylesheet" href="index.css">
-        <link
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedro Papp - Portfolio</title>
+    <link rel="stylesheet" href="index.css">
+    <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap"
         rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-        <script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.506/build/spline-viewer.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <script defer src="main.js"></script>
-    </head>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.506/build/spline-viewer.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="path/to/your/globe.js"></script>
+    <script defer src="main.js"></script>
+</head>
 
-    <body>
-        <header>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <img src="/assets/crop.png" alt="Pedro Papp" class="hero-image">
+                <div class="hero-text">
+                    <h1>Pedro Papp</h1>
+                    <p>Data driven decisions | Artificial Intelligence</p>
                 </div>
-            </nav>
-        </header>
-        
-        
-        <main>
-            <section class="hero-section">
-                <div class="hero-content">
-                    <img src="/assets/crop.png" alt="Pedro Papp" class="hero-image">
-                    <div class="hero-text">
-                        <h1>Pedro Papp</h1>
-                        <p>Data driven decisions | Artificial Intelligence</p>
-                    </div>
-                </div>
-                <spline-viewer id="spline-viewer"
+            </div>
+            <spline-viewer id="spline-viewer"
                 url="https://prod.spline.design/LKkBYeF2FE9zCFLh/scene.splinecode"></spline-viewer>
-            </section>
-            <section id="about" class="about">
-                <div class="container">
-                    <h2 data-aos="fade-up">About Me</h2>
-                    <div class="about-content" data-aos="fade-up" data-aos-delay="100">
-                        <div class="about-text">
-                            <p>I have lived in Curitiba, London, Lisbon, Cologne and Montreal. In every role and on every project, I bring a blend of logical reasoning, analysis, and curiosity which enables me to locate pain points and develop improvements. I am driven by feedback, whether from clients, team members or managers and value open communication, which I have found crucial in bridging cultural differences and working and volunteering in different environments and on varied initiatives.</p>
-                            <br>
-                            <p>My studies and work have allowed me to focus on key areas, such as sustainable transformation, data modelling, statistics, programming, market research, SEO and artificial intelligence. Bringing my curiosity to every project and every position, I am looking to work in an environment where I can use data to better understand complex processes and make decisions to affect growth and positive change.</p>
-                        </div>
-                        <div id="map" class="about-map"></div>
+        </section>
+        <section id="about" class="about">
+            <div class="container">
+                <h2 data-aos="fade-up">About Me</h2>
+                <div class="about-content" data-aos="fade-up" data-aos-delay="100">
+                    <div class="about-text">
+                        <p>I have lived in Curitiba, London, Lisbon, Cologne and Montreal. In every role and on every
+                            project, I bring a blend of logical reasoning, analysis, and curiosity which enables me to
+                            locate pain points and develop improvements. I am driven by feedback, whether from clients,
+                            team members or managers and value open communication, which I have found crucial in
+                            bridging cultural differences and working and volunteering in different environments and on
+                            varied initiatives.</p>
+                        <br>
+                        <p>My studies and work have allowed me to focus on key areas, such as sustainable
+                            transformation, data modelling, statistics, programming, market research, SEO and artificial
+                            intelligence. Bringing my curiosity to every project and every position, I am looking to
+                            work in an environment where I can use data to better understand complex processes and make
+                            decisions to affect growth and positive change.</p>
                     </div>
+                    <div id="map" class="about-map"></div>
+<div id="city-info"></div>
                 </div>
-            </section>
-            
+            </div>
+        </section>
+
         <section id="projects" class="projects">
             <div class="container">
                 <h2 data-aos="fade-up"> Projects</h2>
@@ -81,24 +94,23 @@
                     </div>
                     <div class="project-card" data-aos="fade-up" data-aos-delay="200">
                         <i class="fas fa-robot project-icon"></i>
-                        <h3>ENEM AI writing assistant</h3>
-                        <p>Made during a 48h hackathon. Project focused on helping Brazilian highschool students on developing their writing skills for the ENEM (National
+                        <h3>ENEM AI Writing Assistant</h3>
+                        <p>Made during a 48h hackathon. Project focused on helping Brazilian highschool students on
+                            developing their writing skills for the ENEM (National
                             Exam)</p>
                         <a href="https://github.com/pedropapp/projetogemini" class="btn" target="_blank"
                             rel="noopener noreferrer"><i class="fab fa-github"></i> View Project</a>
                     </div>
-                    <!-- <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                         <i class="fas fa-chart-pie project-icon"></i>
-                        <h3>Project</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae est incidunt rerum inventore nostrum beatae nisi porro cumque reprehenderit repellat.</p>
-                        <a href=""
-                            class="btn" target="_blank" rel="noopener noreferrer"><i
+                        <h3>Netflix Interactive Dashboard</h3>
+                        <p>11 years of personal Netflix data arranged in a interactive dashboard. this project used D3js and the TMDB API.</p>
+                        <a href="/project/project.html" class="btn" target="_blank" rel="noopener noreferrer"><i
                                 class="fas fa-external-link-alt"></i> View Project</a>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </section>
-
         <section id="skills" class="skills">
             <div class="container">
                 <h2 data-aos="fade-up">Skills</h2>
@@ -142,11 +154,8 @@
                         target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-github"></i> GitHub
                     </a>
-                    <a href="/assets/CV_PedroPapp.pdf" class="contact-item" 
-                    data-aos="fade-up" 
-                    data-aos-delay="400"  
-                    target="_blank" 
-                    rel="noopener noreferrer">
+                    <a href="/assets/CV_PedroPapp.pdf" class="contact-item" data-aos="fade-up" data-aos-delay="400"
+                        target="_blank" rel="noopener noreferrer">
                         <i class="fa fa-user"></i> CV
                     </a>
                 </div>

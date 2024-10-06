@@ -1,0 +1,428 @@
+/* General Styles */
+body {
+    background-color: #141414;
+    color: #fff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+    background-color: #000;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+}
+
+/* Typography */
+h1, h2, h3 {
+    color: #E50914;
+}
+
+h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    margin: 0;
+}
+
+h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #E50914;
+    margin: 0 0 10px 0;
+    padding: 0;
+    text-align: left;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #a3a3a3;
+    margin: 0 0 15px 0;
+    padding: 0;
+    text-align: left;
+}
+
+
+/* Layout Styles */
+.row1, .row2, .row3, .row4 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 30px 20px;
+}
+
+/* Direct children of rows */
+.row1 > div, .row2 > div, .row3 > div, .row4 > div {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 300px;
+    background-color: rgba(20, 20, 20, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+/* Specific adjustment for row3 */
+.row3 > div {
+    flex: 1 1 calc(33.33% - 14px);
+}
+
+/* Remove shadow from nested divs */
+.row1 > div > div, .row2 > div > div, .row3 > div > div, .row4 > div > div {
+    box-shadow: none;
+    background-color: transparent;
+}
+
+/* Chart Styles */
+.chart {
+    background-color: rgba(20, 20, 20, 0.8);
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.chart text {
+    fill: #fff;
+    font-size: 12px;
+}
+
+.chart .domain, .chart .tick line {
+    stroke: rgba(255, 255, 255, 0.2);
+}
+
+#user-analysis {
+    overflow: hidden;
+}
+
+.country {
+    height: 100%;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background-color: #E50914;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 4px 0 0 4px;
+}
+
+td {
+    background-color: rgba(40, 40, 40, 0.6);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Profile Selector Styles */
+.profile-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 5px 0;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0;
+    margin-bottom: 5px;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 8px;
+    text-align: center;
+}
+
+.profile-container.active {
+    background-color: rgba(128, 128, 128, 0.571);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Carousel Styles */
+.carousel {
+    background-color: rgba(20, 20, 20, 0.8);
+    border-radius: 8px;
+    margin: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: calc(100% - 60px);
+    box-sizing: border-box;
+}
+
+.wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.wrapper section {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    width: calc(100% - 100px);
+    padding: 60px 20px;
+    margin: 0 20px;
+    scrollbar-width: none;
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.items {
+    display: flex;
+    gap: 10px;
+}
+
+.item {
+    flex: 0 0 200px;
+    transition: transform 250ms ease-in-out;
+    width: 200px;
+    margin-right: 8px;
+}
+
+.item:hover {
+    transform: scale(1.22);
+    z-index: 2;
+}
+
+.arrow__btn {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 70%;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.5) 25%,
+        rgba(0, 0, 0, 0.7) 50%,
+        rgba(0, 0, 0, 0.5) 75%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    border: none;
+    outline: none;
+    transition: background 0.3s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+}
+
+.arrow__btn:hover {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.9) 50%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+
+.carousel-backdrop {
+    width: 200px;
+    height: 112px;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-title {
+    font-family: 'Netflix Sans', Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 8px 0 4px;
+    color: #fff;
+    transition: opacity 0.3s ease;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.carousel-duration {
+    font-family: 'Netflix Sans', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #a3a3a3;
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+/* Dropdown Styles */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+#content-type-dropdown {
+    appearance: none;
+    background-color: #141414;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 40px 10px 20px;
+    width: 200px;
+    transition: all 0.3s ease;
+}
+
+#content-type-dropdown:hover {
+    background-color: #1f1f1f;
+}
+
+#content-type-dropdown:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.5);
+}
+
+.dropdown-container::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #fff;
+    pointer-events: none;
+    font-size: 12px;
+}
+
+#content-type-dropdown option {
+    background-color: #141414;
+    color: #fff;
+    padding: 10px;
+}
+
+#content-type-dropdown option:hover {
+    background-color: #e50914;
+}
+
+
+/* Footer Styles */
+footer {
+    background-color: #000000;
+    color: #999;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tmdb-logo {
+    width: 60px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.footer-text {
+    flex-grow: 1;
+}
+
+.footer-text p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.footer-text p:first-child {
+    margin-bottom: 5px;
+}
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .row1, .row2, .row3, .row4 {
+        flex-direction: column;
+    }
+
+    .row1 > div, .row2 > div, .row3 > div, .row4 > div {
+        width: 100%;
+    }
+}
+
+/* Netflix Sans Font */
+@font-face {
+    font-family: 'Netflix Sans';
+    src: url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2') format('woff2'),
+         url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
