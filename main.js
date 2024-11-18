@@ -37,7 +37,7 @@ class Versor {
   static interpolate([a1, b1, c1, d1], [a2, b2, c2, d2]) {
     let dot = a1 * a2 + b1 * b2 + c1 * c2 + d1 * d2;
     if (dot < 0) a2 = -a2, b2 = -b2, c2 = -c2, d2 = -d2, dot = -dot;
-    if (dot > 0.9995) return Versor.interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]); 
+    if (dot > 0.9995) return Versor.interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]);
     const theta0 = Math.acos(Math.max(-1, Math.min(1, dot)));
     const x = new Array(4);
     const l = Math.hypot(a2 -= a1 * dot, b2 -= b1 * dot, c2 -= c1 * dot, d2 -= d1 * dot);
@@ -70,17 +70,17 @@ hamburger.addEventListener('click', () => {
 });
 
 // Globe and map functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('.about-map');
   const width = container.clientWidth;
   const height = container.clientHeight;
 
   const cities = [
-    {name: "Curitiba", coords: [-49.2671, -25.4290], country: "Brazil", comment: "Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness."},
-    {name: "London", coords: [-0.1278, 51.5074], country: "United Kingdom", comment: "Expanded my horizons during my high school years. Studied in a prestigious school in a global city, and discovered my love for computer science, design, and exploring the world."},
-    {name: "Lisbon", coords: [-9.1393, 38.7223], country: "Portugal", comment: "Started university with a goal of expanding my horizons, and participated as a scholar attendee on WebSummit, during my two years there."},
-    {name: "Cologne", coords: [6.9603, 50.9375], country: "Germany", comment: "Decided to continue my studies in Germany, where I worked on projects with a focus on sustainability and social impact."},
-    {name: "Montreal", coords: [-73.5673, 45.5017], country: "Canada", comment: "Ended my studies at McGill University. Started working with prompt engineering and developed my web development skills."},
+    { name: "Curitiba", coords: [-49.2671, -25.4290], country: "Brazil", comment: "Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness." },
+    { name: "London", coords: [-0.1278, 51.5074], country: "United Kingdom", comment: "Expanded my horizons during my high school years. Studied in a prestigious school in a global city, and discovered my love for computer science, design, and exploring the world." },
+    { name: "Lisbon", coords: [-9.1393, 38.7223], country: "Portugal", comment: "Started university with a goal of expanding my horizons, and participated as a scholar attendee on WebSummit, during my two years there." },
+    { name: "Cologne", coords: [6.9603, 50.9375], country: "Germany", comment: "Decided to continue my studies in Germany, where I worked on projects with a focus on sustainability and social impact." },
+    { name: "Montreal", coords: [-73.5673, 45.5017], country: "Canada", comment: "Ended my studies at McGill University. Started working with prompt engineering and developed my web development skills." },
   ];
 
   let currentIndex = 0;
@@ -100,11 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
     .attr("viewBox", `0 0 ${width} ${height}`);
 
   const globe = svg.append("circle")
-    .attr("fill", "#4B93C3")
+    .attr("fill", "#1a4b77")  // Darker blue for ocean
     .attr("stroke", "#000")
     .attr("stroke-width", "0.2")
-    .attr("cx", width/2)
-    .attr("cy", height/2)
+    .attr("cx", width / 2)
+    .attr("cy", height / 2)
     .attr("r", initialScale);
 
   let map = svg.append("g");
@@ -130,34 +130,44 @@ document.addEventListener('DOMContentLoaded', function() {
       rotateToNextCity();
     });
 
+  // Only modifying these two functions, rest of the code stays exactly the same
+
   function addFlightPaths() {
     for (let i = 0; i < cities.length - 1; i++) {
       const source = cities[i].coords;
       const target = cities[i + 1].coords;
-      
-      const route = {type: "LineString", coordinates: [source, target]};
+
+      const route = { type: "LineString", coordinates: [source, target] };
       flightPathGroup.append("path")
         .datum(route)
         .attr("class", "flight-path")
         .attr("d", path)
         .style("fill", "none")
-        .style("stroke", "#FFD700")
+        .style("stroke", "white")
         .style("stroke-width", 2)
-        .style("stroke-dasharray", "4,4")
-        .style("opacity", 0);
+        .style("stroke-dasharray", function () {
+          return this.getTotalLength() + " " + this.getTotalLength();
+        })
+        .style("stroke-dashoffset", function () {
+          return this.getTotalLength();
+        })
+        .style("opacity", 0); // Start invisible
     }
   }
 
   function rotateToNextCity() {
     if (currentIndex >= cities.length) {
       currentIndex = 0;
+      flightPathGroup.selectAll("*").remove();
+      addFlightPaths();
     }
-
+  
     const city = cities[currentIndex];
     const [lambda, phi] = city.coords;
     const rotation = projection.rotate();
     const targetRotation = [-lambda, -phi, rotation[2]];
-
+  
+    // First rotate the globe
     d3.transition()
       .duration(2000)
       .tween("rotate", () => {
@@ -168,14 +178,49 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       })
       .on("end", () => {
-        showCityInfo(city);
-        highlightCountry(city.country);
-        highlightFlightPath();
-        currentIndex++;
-        setTimeout(rotateToNextCity, 5000);
+        // Show first city info immediately after rotation
+        if (currentIndex === 0) {
+          showCityInfo(city);
+          highlightCountry(city.country);
+        }
+        
+        // Wait a bit, then animate the path
+        setTimeout(() => {
+          // Fade out previous path if it exists
+          if (currentIndex > 0) {
+            flightPathGroup.selectAll(".flight-path")
+              .filter((d, i) => i === currentIndex - 1)
+              .transition()
+              .duration(1000)
+              .style("opacity", 0);
+          }
+  
+          // If there's a next city, draw the path to it
+          if (currentIndex < cities.length - 1) {
+            const currentPath = flightPathGroup.selectAll(".flight-path")
+              .filter((d, i) => i === currentIndex);
+            
+            currentPath
+              .style("opacity", 0.6)
+              .transition()
+              .duration(2000)
+              .style("stroke-dashoffset", 0)
+              .on("end", () => {
+                // Show next city info and start next rotation
+                setTimeout(() => {
+                  showCityInfo(cities[currentIndex + 1]);
+                  highlightCountry(cities[currentIndex + 1].country);
+                  currentIndex++;
+                  rotateToNextCity();
+                }, 2000);
+              });
+          } else {
+            currentIndex++;
+            setTimeout(rotateToNextCity, 3000);
+          }
+        }, 1000); // Wait 1 second after rotation before drawing line
       });
   }
-
   function showCityInfo(city) {
     const infoDiv = d3.select("#city-info");
     infoDiv.html(`<h3>${city.name}, ${city.country}</h3><p>${city.comment}</p>`)
@@ -192,11 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .attr("fill", d => d.properties.name === countryName ? "#1B5E20" : "#4CAF50")  // Darker green for selected country
       .attr("stroke", d => d.properties.name === countryName ? "#FFFFFF" : "#000")
       .attr("stroke-width", d => d.properties.name === countryName ? 1 : 0.1);
-  }
-
-  function highlightFlightPath() {
-    flightPathGroup.selectAll(".flight-path")
-      .style("opacity", (d, i) => i === currentIndex - 1 ? 1 : 0.2);
   }
 
   // Remove user interactions
