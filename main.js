@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const cities = [
     { name: "Curitiba", coords: [-49.2671, -25.4290], country: "Brazil", comment: "Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness." },
     { name: "London", coords: [-0.1278, 51.5074], country: "United Kingdom", comment: "Expanded my horizons during my high school years. Studied in a prestigious school in a global city, and discovered my love for computer science, design, and exploring the world." },
-    { name: "Lisbon", coords: [-9.1393, 38.7223], country: "Portugal", comment: "Started university with a goal of expanding my horizons, and participated as a scholar attendee on WebSummit, during my two years there." },
+    { name: "Lisbon", coords: [-9.1393, 38.7223], country: "Portugal", comment: "Started university, and participated as a scholar attendee on WebSummit, during my two years there." },
     { name: "Cologne", coords: [6.9603, 50.9375], country: "Germany", comment: "Decided to continue my studies in Germany, where I worked on projects with a focus on sustainability and social impact." },
     { name: "Montreal", coords: [-73.5673, 45.5017], country: "Canada", comment: "Ended my studies at McGill University. Started working with prompt engineering and developed my web development skills." },
   ];
