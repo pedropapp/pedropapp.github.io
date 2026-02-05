@@ -1,13 +1,25 @@
+// Responsive chart dimensions
+function getResponsiveWidth(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return 800;
+  const containerWidth = container.offsetWidth || container.clientWidth;
+  return Math.max(300, containerWidth - 40); // Minimum 300px, with 40px padding
+}
+
 function createBarChart(data, selector, xLabel, yLabel) {
+    const containerWidth = getResponsiveWidth(selector.replace('#', ''));
+    const isMobile = window.innerWidth <= 768;
     const margin = { top: 20, right: 20, bottom: 70, left: 60 };
-    const width = 1000 - margin.left - margin.right;
+    const width = containerWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
     d3.select(selector).selectAll("*").remove();
 
     const svg = d3.select(selector).append('svg')
-        .attr('width', width + margin.left + margin.right)
+        .attr('width', '100%')
         .attr('height', height + margin.top + margin.bottom)
+        .attr('viewBox', `0 0 ${containerWidth} ${height + margin.top + margin.bottom}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet')
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -29,10 +41,13 @@ function createBarChart(data, selector, xLabel, yLabel) {
         .call(d3.axisBottom(x))
         .selectAll('text')
         .attr('transform', 'translate(-10,0)rotate(-45)')
-        .style('text-anchor', 'end');
+        .style('text-anchor', 'end')
+        .style('font-size', isMobile ? '14px' : '12px');
 
     svg.append('g')
-        .call(d3.axisLeft(y).ticks(5));
+        .call(d3.axisLeft(y).ticks(5))
+        .selectAll('text')
+        .style('font-size', isMobile ? '14px' : '12px');
 
     svg.selectAll('mybar')
         .data(data)
@@ -55,7 +70,7 @@ function createBarChart(data, selector, xLabel, yLabel) {
         .attr('text-anchor', 'middle')
         .text(d => d[1].toFixed(2))
         .attr('fill', 'white')
-        .attr('font-size', '10px');
+        .attr('font-size', isMobile ? '12px' : '10px');
 
     svg.append('text')
         .attr('transform', 'rotate(-90)')
@@ -63,8 +78,20 @@ function createBarChart(data, selector, xLabel, yLabel) {
         .attr('x', 0 - (height / 2))
         .attr('dy', '1em')
         .attr('text-anchor', 'middle')
+        .attr('font-size', isMobile ? '14px' : '12px')
         .text(yLabel);
 }
+
+// Add resize listener to redraw chart on window resize
+let resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    if (typeof analyzeData === 'function') {
+      analyzeData();
+    }
+  }, 250);
+});
 function createLineChart(data, selector, xLabel, yLabel) {
     const margin = { top: 20, right: 20, bottom: 30, left: 60 };
     const width = 800 - margin.left - margin.right;

@@ -528,3 +528,8 @@ footer {
     stroke: white;
     stroke-width: 2;
   } 
+  @media (max-width: 768px) {
+  #city-info {
+    display: none !important;
+  }
+}
