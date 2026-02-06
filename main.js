@@ -433,87 +433,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function createPlane() {
-    const plane = planeGroup.append("g")
+    const plane = planeGroup.append("image")
       .attr("class", "plane")
+      .attr("href", "assets/White_plane_icon.svg.png")
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("x", -15) // Center the image
+      .attr("y", -15) // Center the image
       .style("opacity", 0);
     
-    // Airplane body (fuselage)
-    plane.append("path")
-      .attr("d", "M 0,-2 L 16,-2 L 18,0 L 16,2 L 0,2 Z")
-      .style("fill", "white")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    // Main wings
-    plane.append("path")
-      .attr("d", "M 4,-2 L 4,-8 L 10,-6 L 10,-2 Z")
-      .style("fill", "white")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    plane.append("path")
-      .attr("d", "M 4,2 L 4,8 L 10,6 L 10,2 Z")
-      .style("fill", "white")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    // Tail wings
-    plane.append("path")
-      .attr("d", "M 0,-2 L -2,-4 L 2,-3 Z")
-      .style("fill", "white")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    plane.append("path")
-      .attr("d", "M 0,2 L -2,4 L 2,3 Z")
-      .style("fill", "white")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    // Nose cone (pointed front)
-    plane.append("path")
-      .attr("d", "M 16,-2 L 20,0 L 16,2 Z")
-      .style("fill", "#f0f0f0")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 0.5);
-    
-    // Cockpit window
-    plane.append("circle")
-      .attr("cx", 14)
-      .attr("cy", 0)
-      .attr("r", 1.5)
-      .style("fill", "#4a90e2")
-      .style("opacity", 0.7);
-    
     return plane;
-  }
-
-  function animatePlane(pathElement, sourceCoords, targetCoords) {
-    const plane = createPlane();
-    const pathLength = pathElement.getTotalLength();
-    
-    plane.style("opacity", 1);
-    
-    return plane.transition()
-      .duration(2000)
-      .ease(d3.easeLinear)
-      .tween("plane-move", function() {
-        return function(t) {
-          const point = pathElement.getPointAtLength(t * pathLength);
-          const nextPoint = pathElement.getPointAtLength(Math.min((t + 0.01) * pathLength, pathLength));
-          
-          // Calculate rotation angle
-          const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
-          
-          plane.attr("transform", `translate(${point.x}, ${point.y}) rotate(${angle})`);
-        };
-      })
-      .on("end", function() {
-        plane.transition()
-          .duration(300)
-          .style("opacity", 0)
-          .remove();
-      });
   }
 
   function rotateToNextCity() {
@@ -574,18 +503,50 @@ document.addEventListener('DOMContentLoaded', function () {
               const currentPath = flightPathGroup.selectAll(".flight-path")
                 .filter((d, i) => i === currentIndex);
               
-              // Make path visible
+              const pathElement = currentPath.node();
+              
+              // Create plane at the start of the path
+              const plane = createPlane();
+              plane.style("opacity", 1);
+              
+              // Get starting position
+              const startPoint = pathElement.getPointAtLength(0);
+              plane.attr("transform", `translate(${startPoint.x}, ${startPoint.y})`);
+              
+              // Make path visible and animate it
               currentPath
                 .style("opacity", 0.6)
+                .style("stroke-dashoffset", function() {
+                  return this.getTotalLength();
+                })
                 .transition()
                 .duration(2000)
+                .ease(d3.easeLinear)
                 .style("stroke-dashoffset", 0)
-                .on("start", function() {
-                  // Start plane animation
-                  const pathElement = this;
-                  animatePlane(pathElement, cities[currentIndex].coords, cities[currentIndex + 1].coords);
+                .tween("plane-follow", function() {
+                  const pathLen = this.getTotalLength();
+                  return function(t) {
+                    // Get current point on the path
+                    const point = pathElement.getPointAtLength(t * pathLen);
+                    
+                    // Get a point slightly ahead to calculate the angle
+                    const lookahead = Math.min((t + 0.005) * pathLen, pathLen);
+                    const nextPoint = pathElement.getPointAtLength(lookahead);
+                    
+                    // Calculate rotation angle based on the direction of movement
+                    const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
+                    
+                    // Position plane at the tip of the line
+                    plane.attr("transform", `translate(${point.x}, ${point.y}) rotate(${angle})`);
+                  };
                 })
                 .on("end", () => {
+                  // Fade out plane
+                  plane.transition()
+                    .duration(300)
+                    .style("opacity", 0)
+                    .remove();
+                  
                   // Hide the path
                   currentPath.transition()
                     .duration(500)
