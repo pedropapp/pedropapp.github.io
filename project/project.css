@@ -118,6 +118,15 @@ h2 {
     display: block;
 }
 
+/* Fixed-size charts (pie, radial) — center in their container */
+#device-chart,
+#genres-chart,
+#hourly-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Specific fix for daily chart */
 #daily-chart {
     overflow: hidden;
@@ -136,6 +145,26 @@ h2 {
 .country {
     height: 100%;
     overflow: hidden;
+}
+
+/* Country details overlay — always small and unobtrusive */
+.country-details {
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 5px;
+    padding: 8px 12px;
+    pointer-events: none;
+}
+
+.country-details h3 {
+    font-size: 13px;
+    margin: 0 0 4px 0;
+    color: #E50914;
+}
+
+.country-details p {
+    font-size: 12px;
+    margin: 0;
+    color: #fff;
 }
 
 /* Table Styles */
@@ -478,6 +507,8 @@ footer {
         padding: 15px;
     }
 
+
+
     /* Table mobile optimization */
     table {
         font-size: 12px;
@@ -552,6 +583,15 @@ footer {
     .chart svg {
         min-width: 300px;
     }
+
+    /* Country details overlay — keep small on mobile */
+    .country-details h3 {
+        font-size: 11px;
+    }
+
+    .country-details p {
+        font-size: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -603,7 +643,3 @@ footer {
     font-weight: normal;
     font-style: normal;
 }
-
-
-
-

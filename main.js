@@ -1,9 +1,17 @@
-// Versor class for smooth rotations
+// ─── AOS ─────────────────────────────────────────────────────────────────────
+AOS.init({ duration: 1000, once: true });
+
+// ─── Hamburger menu ───────────────────────────────────────────────────────────
+const hamburger = document.querySelector('.hamburger');
+const navLinks  = document.querySelector('.nav-links');
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+}
+
+// ─── Versor (SLERP quaternion interpolation) ──────────────────────────────────
 class Versor {
   static fromAngles([l, p, g]) {
-    l *= Math.PI / 360;
-    p *= Math.PI / 360;
-    g *= Math.PI / 360;
+    l *= Math.PI / 360; p *= Math.PI / 360; g *= Math.PI / 360;
     const sl = Math.sin(l), cl = Math.cos(l);
     const sp = Math.sin(p), cp = Math.cos(p);
     const sg = Math.sin(g), cg = Math.cos(g);
@@ -11,599 +19,350 @@ class Versor {
       cl * cp * cg + sl * sp * sg,
       sl * cp * cg - cl * sp * sg,
       cl * sp * cg + sl * cp * sg,
-      cl * cp * sg - sl * sp * cg
+      cl * cp * sg - sl * sp * cg,
     ];
   }
   static toAngles([a, b, c, d]) {
     return [
       Math.atan2(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)) * 180 / Math.PI,
       Math.asin(Math.max(-1, Math.min(1, 2 * (a * c - d * b)))) * 180 / Math.PI,
-      Math.atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * 180 / Math.PI
+      Math.atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * 180 / Math.PI,
     ];
+  }
+  static interpolate([a1, b1, c1, d1], [a2, b2, c2, d2]) {
+    let dot = a1 * a2 + b1 * b2 + c1 * c2 + d1 * d2;
+    if (dot < 0) { a2 = -a2; b2 = -b2; c2 = -c2; d2 = -d2; dot = -dot; }
+    if (dot > 0.9995) {
+      return t => {
+        const x = [a1+(a2-a1)*t, b1+(b2-b1)*t, c1+(c2-c1)*t, d1+(d2-d1)*t];
+        const l = Math.hypot(...x);
+        return x.map(v => v / l);
+      };
+    }
+    const theta0 = Math.acos(dot);
+    const sin0   = Math.sin(theta0);
+    return t => {
+      const theta = theta0 * t;
+      const s1 = Math.cos(theta) - dot * Math.sin(theta) / sin0;
+      const s2 = Math.sin(theta) / sin0;
+      return [a1*s1+a2*s2, b1*s1+b2*s2, c1*s1+c2*s2, d1*s1+d2*s2];
+    };
   }
   static interpolateAngles(a, b) {
     const i = Versor.interpolate(Versor.fromAngles(a), Versor.fromAngles(b));
     return t => Versor.toAngles(i(t));
   }
-  static interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]) {
-    a2 -= a1, b2 -= b1, c2 -= c1, d2 -= d1;
-    const x = new Array(4);
-    return t => {
-      const l = Math.hypot(x[0] = a1 + a2 * t, x[1] = b1 + b2 * t, x[2] = c1 + c2 * t, x[3] = d1 + d2 * t);
-      x[0] /= l, x[1] /= l, x[2] /= l, x[3] /= l;
-      return x;
-    };
-  }
-  static interpolate([a1, b1, c1, d1], [a2, b2, c2, d2]) {
-    let dot = a1 * a2 + b1 * b2 + c1 * c2 + d1 * d2;
-    if (dot < 0) a2 = -a2, b2 = -b2, c2 = -c2, d2 = -d2, dot = -dot;
-    if (dot > 0.9995) return Versor.interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]);
-    const theta0 = Math.acos(Math.max(-1, Math.min(1, dot)));
-    const x = new Array(4);
-    const l = Math.hypot(a2 -= a1 * dot, b2 -= b1 * dot, c2 -= c1 * dot, d2 -= d1 * dot);
-    a2 /= l, b2 /= l, c2 /= l, d2 /= l;
-    return t => {
-      const theta = theta0 * t;
-      const s = Math.sin(theta);
-      const c = Math.cos(theta);
-      x[0] = a1 * c + a2 * s;
-      x[1] = b1 * c + b2 * s;
-      x[2] = c1 * c + c2 * s;
-      x[3] = d1 * c + d2 * s;
-      return x;
-    };
-  }
 }
 
-// Auto-scroll functionality
-class AutoScrollManager {
-  constructor() {
-    this.scrollTimeout = null;
-    this.isAutoScrolling = false;
-    this.hasUserScrolled = false;
-    this.scrollIndicator = null;
-    this.init();
-  }
-
-  init() {
-    this.createScrollIndicator();
-    this.setupScrollListeners();
-    this.startScrollTimer();
-  }
-
-  createScrollIndicator() {
-    // Create scroll indicator element
-    this.scrollIndicator = document.createElement('div');
-    this.scrollIndicator.className = 'scroll-indicator';
-    this.scrollIndicator.innerHTML = `
-      <div class="scroll-arrow">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <span class="scroll-text">Scroll to explore</span>
-    `;
-    
-    // Add styles
-    const style = document.createElement('style');
-    style.textContent = `
-      .scroll-indicator {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        opacity: 0;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        pointer-events: none;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      }
-      
-      .scroll-indicator.show {
-        opacity: 1;
-        animation: scrollPulse 2s infinite;
-      }
-      
-      .scroll-arrow {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: bounce 2s infinite;
-      }
-      
-      .scroll-text {
-        background: rgba(0, 0, 0, 0.7);
-        padding: 8px 16px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
-          transform: translateY(0);
-        }
-        40% {
-          transform: translateY(-10px);
-        }
-        60% {
-          transform: translateY(-5px);
-        }
-      }
-      
-      @keyframes scrollPulse {
-        0%, 100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.7;
-        }
-      }
-      
-      @media (max-width: 768px) {
-        .scroll-indicator {
-          bottom: 20px;
-          font-size: 12px;
-        }
-        
-        .scroll-arrow {
-          width: 36px;
-          height: 36px;
-        }
-        
-        .scroll-text {
-          padding: 6px 12px;
-        }
-      }
-    `;
-    
-    document.head.appendChild(style);
-    document.body.appendChild(this.scrollIndicator);
-  }
-
-  setupScrollListeners() {
-    // Listen for user scroll events
-    window.addEventListener('scroll', () => {
-      if (!this.isAutoScrolling) {
-        this.hasUserScrolled = true;
-        this.hideScrollIndicator();
-        this.resetScrollTimer();
-      }
-    }, { passive: true });
-
-    // Listen for other user interactions that indicate engagement
-    ['mousedown', 'touchstart', 'keydown', 'click'].forEach(event => {
-      document.addEventListener(event, () => {
-        this.resetScrollTimer();
-      }, { passive: true });
-    });
-
-    // Reset timer when user interacts with navigation or buttons
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('a, button, .hamburger, .nav-links a')) {
-        this.resetScrollTimer();
-      }
-    });
-  }
-
-  startScrollTimer() {
-    this.clearScrollTimer();
-    this.scrollTimeout = setTimeout(() => {
-      this.performAutoScroll();
-    }, 10000); // 10 seconds
-  }
-
-  resetScrollTimer() {
-    this.clearScrollTimer();
-    if (!this.hasUserScrolled && window.scrollY < 100) {
-      this.startScrollTimer();
-    }
-  }
-
-  clearScrollTimer() {
-    if (this.scrollTimeout) {
-      clearTimeout(this.scrollTimeout);
-      this.scrollTimeout = null;
-    }
-  }
-
-  showScrollIndicator() {
-    if (this.scrollIndicator && window.scrollY < 100) {
-      this.scrollIndicator.classList.add('show');
-      
-      // Hide after 3 seconds
-      setTimeout(() => {
-        this.hideScrollIndicator();
-      }, 3000);
-    }
-  }
-
-  hideScrollIndicator() {
-    if (this.scrollIndicator) {
-      this.scrollIndicator.classList.remove('show');
-    }
-  }
-
-  performAutoScroll() {
-    // Only auto-scroll if user hasn't scrolled much and page has more content
-    const currentScroll = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    
-    if (currentScroll < 100 && documentHeight > windowHeight + 200) {
-      // Show indicator first for 2 seconds
-      this.showScrollIndicator();
-      
-      setTimeout(() => {
-        this.isAutoScrolling = true;
-        
-        // Smooth scroll down 80px
-        window.scrollTo({
-          top: currentScroll + 80,
-          behavior: 'smooth'
-        });
-        
-        // Reset flag after scroll animation
-        setTimeout(() => {
-          this.isAutoScrolling = false;
-          // Start timer again if user still hasn't scrolled much
-          if (window.scrollY < 200) {
-            this.startScrollTimer();
-          }
-        }, 800);
-        
-      }, 2000);
-    }
-  }
-
-  destroy() {
-    this.clearScrollTimer();
-    if (this.scrollIndicator && this.scrollIndicator.parentNode) {
-      this.scrollIndicator.parentNode.removeChild(this.scrollIndicator);
-    }
-  }
-}
-
-// Initialize AOS
-AOS.init({
-  duration: 1000,
-  once: true
-});
-
-// Hamburger menu functionality
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
-
-hamburger.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
-
-// Initialize auto-scroll manager
-const autoScrollManager = new AutoScrollManager();
-
-// Globe and map functionality
+// ─── Globe ────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('.about-map');
-  const width = container.clientWidth;
-  const height = container.clientHeight;
+  if (!container) return;
 
+  const width  = container.clientWidth  || 500;
+  const height = container.clientHeight || 500;
+  const scale  = Math.min(width, height) / 2.2;
+
+  // Cities — [longitude, latitude]
   const cities = [
-    { name: "Curitiba", coords: [-49.2671, -25.4290], country: "Brazil", comment: "Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness." },
-    { name: "London", coords: [-0.1278, 51.5074], country: "United Kingdom", comment: "Expanded my horizons during my high school years. Studied in a prestigious school in a global city, and discovered my love for computer science, design, and exploring the world." },
-    { name: "Lisbon", coords: [-9.1393, 38.7223], country: "Portugal", comment: "Started university, and participated as a scholar attendee on WebSummit, during my two years there." },
-    { name: "Cologne", coords: [6.9603, 50.9375], country: "Germany", comment: "Decided to continue my studies in Germany, where I worked on projects with a focus on sustainability and social impact." },
-    { name: "Montreal", coords: [-73.5673, 45.5017], country: "Canada", comment: "Ended my studies at McGill University. Started working with prompt engineering and developed my web development skills." },
+    { name: 'Curitiba', coords: [-49.2671, -25.4290], country: 'Brazil',
+      comment: 'Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness.' },
+    { name: 'London',   coords: [-0.1278,  51.5074],  country: 'United Kingdom',
+      comment: 'Expanded my horizons during high school. Discovered my love for computer science, design, and exploring the world.' },
+    { name: 'Lisbon',   coords: [-9.1393,  38.7223],  country: 'Portugal',
+      comment: 'Started university and attended WebSummit as a scholar during my two years there.' },
+    { name: 'Cologne',  coords: [6.9603,   50.9375],  country: 'Germany',
+      comment: 'Continued my studies in Germany, working on projects focused on sustainability and social impact.' },
+    { name: 'Montreal', coords: [-73.5673, 45.5017],  country: 'Canada',
+      comment: 'Finished my studies at McGill University. Worked with prompt engineering and grew my web development skills.' },
   ];
 
-  let currentIndex = 0;
+  // world-atlas@1 stores numeric IDs — NOT name strings
+  const countryIds = { 'Brazil': 76, 'United Kingdom': 826, 'Portugal': 620, 'Germany': 276, 'Canada': 124 };
 
+  // ── Projection ────────────────────────────────────────────────────────────
   const projection = d3.geoOrthographic()
-    .scale(Math.min(width, height) / 2.5)
-    .center([0, 0])
-    .translate([width / 2, height / 2]);
+    .scale(scale)
+    .translate([width / 2, height / 2])
+    .clipAngle(90)
+    .rotate([0, 0, 0]);
 
-  const initialScale = projection.scale();
-  let path = d3.geoPath().projection(projection);
+  const geoPath = d3.geoPath().projection(projection);
 
-  const svg = d3.select(".about-map")
-    .append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("viewBox", `0 0 ${width} ${height}`);
+  // ── SVG scaffold ──────────────────────────────────────────────────────────
+  const svg = d3.select('.about-map')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
 
-  const globe = svg.append("circle")
-    .attr("fill", "#1a4b77")  // Darker blue for ocean
-    .attr("stroke", "#000")
-    .attr("stroke-width", "0.2")
-    .attr("cx", width / 2)
-    .attr("cy", height / 2)
-    .attr("r", initialScale);
+  const defs      = svg.append('defs');
+  const oceanGrad = defs.append('radialGradient').attr('id', 'oceanGrad')
+    .attr('cx', '40%').attr('cy', '35%');
+  oceanGrad.append('stop').attr('offset', '0%').attr('stop-color', '#2a6fa8');
+  oceanGrad.append('stop').attr('offset', '100%').attr('stop-color', '#0d2e4d');
 
-  let map = svg.append("g");
+  svg.append('circle')
+    .attr('cx', width/2).attr('cy', height/2).attr('r', scale)
+    .attr('fill', 'url(#oceanGrad)').attr('stroke', '#1a4b77').attr('stroke-width', 1);
 
-  // Create groups for different elements
-  const flightPathGroup = svg.append("g").attr("class", "flight-paths");
-  const pinGroup = svg.append("g").attr("class", "pins");
-  const planeGroup = svg.append("g").attr("class", "planes");
+  const landGroup   = svg.append('g').attr('class', 'land-group');
+  const graticGroup = svg.append('g').attr('class', 'gratic-group');
+  const flightGroup = svg.append('g').attr('class', 'flight-group');
+  const pinGroup    = svg.append('g').attr('class', 'pin-group');
+  const planeGroup  = svg.append('g').attr('class', 'plane-group');
 
-  d3.json("https://unpkg.com/world-atlas@1/world/110m.json")
-    .then(data => {
-      const countries = topojson.feature(data, data.objects.countries);
-      map.append("g")
-        .attr("class", "countries")
-        .selectAll("path")
-        .data(countries.features)
-        .enter().append("path")
-        .attr("class", "country")
-        .attr("d", path)
-        .attr("fill", "#4CAF50")  // Light green color
-        .attr("stroke", "#000")
-        .attr("stroke-width", 0.1);
+  graticGroup.append('path')
+    .datum(d3.geoGraticule()())
+    .attr('d', geoPath)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(255,255,255,0.07)')
+    .attr('stroke-width', 0.5);
 
-      addFlightPaths();
-      rotateToNextCity();
-    });
-
-  function addFlightPaths() {
-    for (let i = 0; i < cities.length - 1; i++) {
-      const source = cities[i].coords;
-      const target = cities[i + 1].coords;
-
-      const route = { type: "LineString", coordinates: [source, target] };
-      flightPathGroup.append("path")
-        .datum(route)
-        .attr("class", "flight-path")
-        .attr("d", path)
-        .style("fill", "none")
-        .style("stroke", "white")
-        .style("stroke-width", 2)
-        .style("stroke-dasharray", function () {
-          return this.getTotalLength() + " " + this.getTotalLength();
-        })
-        .style("stroke-dashoffset", function () {
-          return this.getTotalLength();
-        })
-        .style("opacity", 0); // Start invisible
-    }
+  function redraw() {
+    landGroup.selectAll('path').attr('d', geoPath);
+    graticGroup.selectAll('path').attr('d', geoPath);
+    flightGroup.selectAll('path').attr('d', geoPath);
   }
 
-  function createPin(city) {
-    const cityProjected = projection(city.coords);
-    if (!cityProjected) return;
-    
-    const pin = pinGroup.append("g")
-      .attr("class", "city-pin")
-      .attr("transform", `translate(${cityProjected[0]}, ${cityProjected[1] - 5})`); // Offset up by 5px
-    
-    // Pin shadow
-    pin.append("ellipse")
-      .attr("cx", 0)
-      .attr("cy", 15)
-      .attr("rx", 8)
-      .attr("ry", 3)
-      .style("fill", "rgba(0,0,0,0.3)")
-      .style("opacity", 0.6);
-    
-    // Pin body
-    pin.append("path")
-      .attr("d", "M0,-20 C-8,-20 -15,-13 -15,-5 C-15,3 0,15 0,15 C0,15 15,3 15,-5 C15,-13 8,-20 0,-20 Z")
-      .style("fill", "#FF6B6B")
-      .style("stroke", "#FF4757")
-      .style("stroke-width", 2);
-    
-    // Pin inner circle
-    pin.append("circle")
-      .attr("cx", 0)
-      .attr("cy", -5)
-      .attr("r", 5)
-      .style("fill", "white");
-    
-    // Pin pulse animation
-    pin.append("circle")
-      .attr("cx", 0)
-      .attr("cy", -5)
-      .attr("r", 5)
-      .style("fill", "none")
-      .style("stroke", "#FF6B6B")
-      .style("stroke-width", 2)
-      .style("opacity", 0)
-      .transition()
-      .duration(1500)
-      .ease(d3.easeLinear)
-      .attr("r", 15)
-      .style("opacity", 0)
-      .on("end", function() {
-        d3.select(this).remove();
-      });
-    
-    return pin;
+  // ── Country highlight ─────────────────────────────────────────────────────
+  function highlightCountry(name) {
+    const id = countryIds[name];
+    landGroup.selectAll('.country')
+      .transition('hl').duration(400)
+      .attr('fill',         d => +d.id === id ? '#66bb6a' : '#3a8a3a')
+      .attr('stroke',       d => +d.id === id ? '#fff'    : '#1a5c1a')
+      .attr('stroke-width', d => +d.id === id ? 0.8       : 0.3);
   }
 
-  function createPlane() {
-    const plane = planeGroup.append("image")
-      .attr("class", "plane")
-      .attr("href", "assets/White_plane_icon.svg.png")
-      .attr("width", 30)
-      .attr("height", 30)
-      .attr("x", -15) // Center the image
-      .attr("y", -15) // Center the image
-      .style("opacity", 0);
-    
-    return plane;
+  function resetHighlight() {
+    landGroup.selectAll('.country')
+      .transition('hl').duration(400)
+      .attr('fill', '#3a8a3a').attr('stroke', '#1a5c1a').attr('stroke-width', 0.3);
   }
 
-  function rotateToNextCity() {
-    if (currentIndex >= cities.length) {
-      currentIndex = 0;
-      flightPathGroup.selectAll("*").remove();
-      pinGroup.selectAll("*").remove();
-      planeGroup.selectAll("*").remove();
-      addFlightPaths();
-    }
-  
-    const city = cities[currentIndex];
-    const [lambda, phi] = city.coords;
-    const rotation = projection.rotate();
-    const targetRotation = [-lambda, -phi, rotation[2]];
-  
-    // First rotate the globe
-    d3.transition()
-      .duration(2000)
-      .tween("rotate", () => {
-        const r = d3.interpolate(rotation, targetRotation);
-        return t => {
-          projection.rotate(r(t));
-          svg.selectAll("path").attr("d", path);
-          // Update pin positions during rotation
-          pinGroup.selectAll(".city-pin").each(function(d, i) {
-            const cityProjected = projection(cities[Math.min(currentIndex, cities.length - 1)].coords);
-            if (cityProjected) {
-              d3.select(this).attr("transform", `translate(${cityProjected[0]}, ${cityProjected[1] - 5})`);
-            }
-          });
-        };
-      })
-      .on("end", () => {
-        // Highlight country first
-        highlightCountry(city.country);
-        
-        // Create pin for current city
-        const pin = createPin(city);
-        
-        // Wait 4 seconds (longer landing time), then proceed to next city or flight
-        setTimeout(() => {
-          if (currentIndex < cities.length - 1) {
-            // Remove pin and start flight
-            pin.transition()
-              .duration(500)
-              .style("opacity", 0)
-              .remove();
-            
-            // Hide city info when flight starts
-            d3.select("#city-info")
-              .transition()
-              .duration(500)
-              .style("opacity", 0);
-            
-            // Show flight path and animate plane
-            setTimeout(() => {
-              const currentPath = flightPathGroup.selectAll(".flight-path")
-                .filter((d, i) => i === currentIndex);
-              
-              const pathElement = currentPath.node();
-              
-              // Create plane at the start of the path
-              const plane = createPlane();
-              plane.style("opacity", 1);
-              
-              // Get starting position
-              const startPoint = pathElement.getPointAtLength(0);
-              plane.attr("transform", `translate(${startPoint.x}, ${startPoint.y})`);
-              
-              // Make path visible and animate it
-              currentPath
-                .style("opacity", 0.6)
-                .style("stroke-dashoffset", function() {
-                  return this.getTotalLength();
-                })
-                .transition()
-                .duration(2000)
-                .ease(d3.easeLinear)
-                .style("stroke-dashoffset", 0)
-                .tween("plane-follow", function() {
-                  const pathLen = this.getTotalLength();
-                  return function(t) {
-                    // Get current point on the path
-                    const point = pathElement.getPointAtLength(t * pathLen);
-                    
-                    // Get a point slightly ahead to calculate the angle
-                    const lookahead = Math.min((t + 0.005) * pathLen, pathLen);
-                    const nextPoint = pathElement.getPointAtLength(lookahead);
-                    
-                    // Calculate rotation angle based on the direction of movement
-                    const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
-                    
-                    // Position plane at the tip of the line
-                    plane.attr("transform", `translate(${point.x}, ${point.y}) rotate(${angle})`);
-                  };
-                })
-                .on("end", () => {
-                  // Fade out plane
-                  plane.transition()
-                    .duration(300)
-                    .style("opacity", 0)
-                    .remove();
-                  
-                  // Hide the path
-                  currentPath.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                  
-                  // Show city info for next city as soon as plane lands
-                  showCityInfo(cities[currentIndex + 1]);
-                  
-                  // Move to next city
-                  currentIndex++;
-                  setTimeout(rotateToNextCity, 800);
-                });
-            }, 500);
-          } else {
-            // Remove pin and city info, then restart cycle
-            pin.transition()
-              .duration(500)
-              .style("opacity", 0)
-              .remove();
-            
-            d3.select("#city-info")
-              .transition()
-              .duration(500)
-              .style("opacity", 0);
-            
-            currentIndex++;
-            setTimeout(rotateToNextCity, 2000);
-          }
-        }, 4000); // Increased from 3000 to 4000ms for longer landing time
-      });
-  }
-  
+  // ── City info ─────────────────────────────────────────────────────────────
   function showCityInfo(city) {
-    const infoDiv = d3.select("#city-info");
-    // Check if we're on mobile (screen width < 768px)
-    const isMobile = window.innerWidth < 768;
-    
-    if (!isMobile) {
-      infoDiv.html(`<h3>${city.name}, ${city.country}</h3><p>${city.comment}</p>`)
-        .style("opacity", 0)
-        .transition()
-        .duration(800)
-        .style("opacity", 1);
+    if (window.innerWidth < 768) return;
+    const panel = d3.select('#city-info');
+    panel.interrupt('info').transition('info').duration(250).style('opacity', 0).on('end', function () {
+      d3.select(this)
+        .html('<h3>' + city.name + ', ' + city.country + '</h3><p>' + city.comment + '</p>')
+        .transition('info').duration(500).style('opacity', 1);
+    });
+  }
+
+  function hideCityInfo() {
+    d3.select('#city-info').interrupt('info').transition('info').duration(250).style('opacity', 0);
+  }
+
+  // ── Pin ───────────────────────────────────────────────────────────────────
+  function createPin(city) {
+    const pt = projection(city.coords);
+    if (!pt) return null;
+
+    // All geometry is in local space where (0,0) = the exact city coordinate on the globe.
+    // The pin tip touches (0,0); the body extends upward.
+    //
+    // Modern teardrop dimensions:
+    //   Bulge radius : 11px   centre at (0, -22)
+    //   Tip          : (0,  0)  ← lands exactly on the projected point
+    //   Total height : ~33px
+    //
+    // Path constructed with cubic beziers so the sides curve naturally
+    // into the tip, matching the Google Maps / modern pin aesthetic.
+    const R  = 11;   // bulge radius
+    const CY = -22;  // bulge centre y  (negative = upward in SVG)
+
+    // Teardrop path: start at tip (0,0), curve up left side to top, arc across, curve back down to tip
+    const pinD = [
+      'M 0,0',
+      'C -6,-8  -' + R + ',' + (CY + R * 0.6) + '  -' + R + ',' + CY,   // left curve from tip to bulge left
+      'A ' + R + ',' + R + ' 0 1,1 ' + R + ',' + CY,                      // arc across the top of the bulge
+      'C ' + R + ',' + (CY + R * 0.6) + '  6,-8  0,0',                    // right curve from bulge right back to tip
+      'Z'
+    ].join(' ');
+
+    const g = pinGroup.append('g')
+      .attr('class', 'city-pin')
+      .attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ')')
+      .style('opacity', 0);
+
+    // Pin body
+    g.append('path')
+      .attr('d', pinD)
+      .style('fill', '#EF4444')
+      .style('stroke', '#B91C1C')
+      .style('stroke-width', 1);
+
+    // Subtle shine on the bulge
+    g.append('circle')
+      .attr('cx', -4).attr('cy', CY - 4)
+      .attr('r', 4)
+      .style('fill', 'rgba(255,255,255,0.25)');
+
+    // White inner dot at bulge centre
+    g.append('circle')
+      .attr('cx', 0).attr('cy', CY)
+      .attr('r', 4.5)
+      .style('fill', '#fff');
+
+    g.transition('pin-fade').duration(400).style('opacity', 1);
+
+    g._remove = function () {
+      g.interrupt('pin-fade').transition('pin-fade').duration(400).style('opacity', 0)
+        .on('end', function () { d3.select(this).remove(); });
+    };
+    return g;
+  }
+
+  // ── Plane (original image asset) ─────────────────────────────────────────
+  function createPlane() {
+    const g = planeGroup.append('g').style('opacity', 0);
+    g.append('image')
+      .attr('href', 'assets/White_plane_icon.svg.png')
+      .attr('width', 30)
+      .attr('height', 30)
+      .attr('x', -15)
+      .attr('y', -15);
+    return g;
+  }
+
+  // ── Globe rotation via named transition ───────────────────────────────────
+  function rotateTo(coords, duration) {
+    return new Promise(function (resolve) {
+      const current = projection.rotate();
+      const target  = [-coords[0], -coords[1], 0];
+      const interp  = Versor.interpolateAngles(current, target);
+
+      d3.transition('globe-rotate')
+        .duration(duration)
+        .ease(d3.easeCubicInOut)
+        .tween('rotate', function () {
+          return function (t) {
+            projection.rotate(interp(t));
+            redraw();
+          };
+        })
+        .on('end',      function () { resolve(); })
+        .on('interrupt',function () { resolve(); }); // never deadlock
+    });
+  }
+
+  // ── Flight animation via rAF (immune to d3 transition cancellation) ───────
+  function animateFlight(fromCoords, toCoords, duration) {
+    return new Promise(function (resolve) {
+      const arcDatum = { type: 'LineString', coordinates: [fromCoords, toCoords] };
+      const arcPath  = flightGroup.append('path')
+        .datum(arcDatum)
+        .attr('d', geoPath)
+        .attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.55)')
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '5,4')
+        .style('opacity', 0);
+
+      arcPath.transition('arc-in').duration(300).style('opacity', 1);
+
+      const plane     = createPlane().style('opacity', 1);
+      const geoInterp = d3.geoInterpolate(fromCoords, toCoords);
+      const startTime = performance.now();
+
+      function tick() {
+        const t      = Math.min((performance.now() - startTime) / duration, 1);
+        const coords = geoInterp(t);
+        const pt     = projection(coords);
+
+        if (pt) {
+          const nCoords = geoInterp(Math.min(t + 0.01, 1));
+          const nPt     = projection(nCoords);
+          const angle   = nPt
+            ? Math.atan2(nPt[1] - pt[1], nPt[0] - pt[0]) * 180 / Math.PI
+            : 0;
+          plane.attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') rotate(' + angle + ')');
+        }
+
+        // Redraw arc continuously as globe rotates beneath it
+        arcPath.attr('d', geoPath);
+
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          plane.transition('plane-out').duration(300).style('opacity', 0)
+            .on('end', function () { d3.select(this).remove(); });
+          arcPath.transition('arc-out').duration(500).style('opacity', 0)
+            .on('end', function () { d3.select(this).remove(); resolve(); });
+        }
+      }
+
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Tour loop ─────────────────────────────────────────────────────────────
+  async function runTour() {
+    while (true) {
+      for (let i = 0; i < cities.length; i++) {
+        const city = cities[i];
+
+        await rotateTo(city.coords, i === 0 ? 1200 : 2400);
+
+        highlightCountry(city.country);
+        const pin = createPin(city);
+        showCityInfo(city);
+
+        await wait(3500);
+
+        if (i < cities.length - 1) {
+          const next   = cities[i + 1];
+          const midLon = (city.coords[0] + next.coords[0]) / 2;
+          const midLat = (city.coords[1] + next.coords[1]) / 2;
+
+          if (pin) pin._remove();
+          hideCityInfo();
+          resetHighlight();
+          await wait(400);
+
+          // Fly + pan globe simultaneously
+          await Promise.all([
+            animateFlight(city.coords, next.coords, 2800),
+            rotateTo([midLon, midLat], 2800),
+          ]);
+
+          await wait(300);
+        } else {
+          if (pin) pin._remove();
+          hideCityInfo();
+          resetHighlight();
+          await wait(1200);
+        }
+      }
+      await wait(500);
     }
   }
 
-  function highlightCountry(countryName) {
-    svg.selectAll(".country")
-      .transition()
-      .duration(200)
-      .attr("fill", d => d.properties.name === countryName ? "#1B5E20" : "#4CAF50")  // Darker green for selected country
-      .attr("stroke", d => d.properties.name === countryName ? "#FFFFFF" : "#000")
-      .attr("stroke-width", d => d.properties.name === countryName ? 1 : 0.1);
-  }
+  // ── Load world data then start ────────────────────────────────────────────
+  d3.json('https://unpkg.com/world-atlas@1/world/110m.json').then(function (world) {
+    const countries = topojson.feature(world, world.objects.countries);
 
-  // Remove user interactions
-  d3.select(".about-map").on("wheel.zoom", null);
-  d3.select(".about-map").on("mousedown.drag", null);
-  d3.select(".about-map").on("touchstart.drag", null);
+    landGroup.selectAll('.country')
+      .data(countries.features)
+      .enter().append('path')
+      .attr('class', 'country')
+      .attr('d', geoPath)
+      .attr('fill', '#3a8a3a')
+      .attr('stroke', '#1a5c1a')
+      .attr('stroke-width', 0.3);
+
+    runTour();
+  }).catch(function (err) {
+    console.error('Failed to load world atlas:', err);
+  });
+
+  d3.select('.about-map')
+    .on('wheel.zoom', null)
+    .on('mousedown.drag', null)
+    .on('touchstart.drag', null);
 });
