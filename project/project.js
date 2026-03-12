@@ -196,7 +196,7 @@ function renderViewingPatterns(data) {
     .sort((a, b) => dayNames.indexOf(a[0]) - dayNames.indexOf(b[0]));
 
   createRadialChart(viewsByHour, '#hourly-chart', 'Hour of Day', 'Total Hours Watched');
-  createBarChart(viewsByDayOfWeek, '#daily-chart', 'Day of Week', 'Total Hours Watched');
+  createWeeklyHeatmap(viewsByDayOfWeek, '#daily-chart');
 }
 
 function getMostCommonGenre(data) {
