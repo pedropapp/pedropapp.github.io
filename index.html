@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedro Papp - Portfolio</title>
     <link rel="stylesheet" href="index.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap"
-        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
     <script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.506/build/spline-viewer.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -20,7 +17,6 @@
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script defer src="main.js"></script>
 </head>
-
 
 <body>
     <header>
@@ -40,7 +36,6 @@
         </nav>
     </header>
 
-
     <main>
         <section class="hero-section">
             <div class="hero-content">
@@ -53,6 +48,7 @@
             <spline-viewer id="spline-viewer"
                 url="https://prod.spline.design/LKkBYeF2FE9zCFLh/scene.splinecode"></spline-viewer>
         </section>
+
         <section id="about" class="about">
             <div class="container">
                 <h2 data-aos="fade-up">About Me</h2>
@@ -72,15 +68,14 @@
                             decisions to affect growth and positive change.</p>
                     </div>
                     <div id="map" class="about-map"></div>
-<div id="city-info"></div>
+                    <div id="city-info"></div>
                 </div>
             </div>
         </section>
 
         <section id="projects" class="projects">
             <div class="container">
-                <h2 data-aos="fade-up"> Projects</h2>
-                <!-- <i class="fas fa-project-diagram"></i> -->
+                <h2 data-aos="fade-up">Projects</h2>
                 <div class="project-grid">
                     <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                         <i class="fas fa-music project-icon"></i>
@@ -88,29 +83,24 @@
                         <p>9 years of Spotify data visualized using Tableau, analyzing listening habits across different
                             countries.</p>
                         <a href="https://public.tableau.com/app/profile/pedro.papp/viz/Spotifyhistory_17086393154780/Dashboard1"
-                            class="btn" target="_blank" rel="noopener noreferrer"><i
-                                class="fas fa-external-link-alt"></i> View Project</a>
+                            class="btn" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt"></i> View Project
+                        </a>
                     </div>
-                    <!-- <div class="project-card" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fas fa-robot project-icon"></i>
-                        <h3>ENEM AI Writing Assistant</h3>
-                        <p>Made during a 48h hackathon. Project focused on helping Brazilian highschool students on
-                            developing their writing skills for the ENEM (National
-                            Exam)</p>
-                        <a href="https://github.com/pedropapp/projetogemini" class="btn" target="_blank"
-                            rel="noopener noreferrer"><i class="fab fa-github"></i> View Project</a>
-                    </div> -->
-                    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-card" data-aos="fade-up" data-aos-delay="200">
                         <i class="fas fa-chart-pie project-icon"></i>
                         <h3>Netflix Interactive Dashboard</h3>
-                        <p>11 years of personal Netflix data arranged in a interactive dashboard. this project used D3js and the TMDB API.</p>
-                        <a href="/project/project.html" class="btn" target="_blank" rel="noopener noreferrer"><i
-                                class="fas fa-external-link-alt"></i> View Project</a>
+                        <p>11 years of personal Netflix data arranged in an interactive dashboard. This project used
+                            D3.js and the TMDB API.</p>
+                        <a href="/project/project.html" class="btn" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt"></i> View Project
+                        </a>
                     </div>
-                    <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-card" data-aos="fade-up" data-aos-delay="300">
                         <i class="fas fa-lock project-icon"></i>
                         <h3>Secure Authentication System</h3>
-                        <p>Authentication system built with Next.js, Nextauth.js, and PostgreSQL. and credential-based login with secure session management.</p>
+                        <p>Authentication system built with Next.js, NextAuth.js, and PostgreSQL with
+                            credential-based login and secure session management.</p>
                         <a href="https://scribe-frontend.vercel.app" class="btn" target="_blank" rel="noopener noreferrer">
                             <i class="fas fa-external-link-alt"></i> View Project
                         </a>
@@ -118,61 +108,107 @@
                 </div>
             </div>
         </section>
+
         <section id="skills" class="skills">
             <div class="container">
                 <h2 data-aos="fade-up">Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="100">
-                        <i class="fas fa-brain"></i> AI
+
+                <div class="skills-categories">
+
+                    <!-- Data & Analytics -->
+                    <div class="skill-category" data-aos="fade-up" data-aos-delay="100">
+                        <span class="skill-category-label">Data &amp; Analytics</span>
+                        <div class="skill-row">
+                            <span class="skill-pill"><i class="fas fa-brain"></i> AI &amp; Machine Learning</span>
+                            <span class="skill-pill"><i class="fas fa-chart-bar"></i> Tableau</span>
+                            <span class="skill-pill"><i class="fas fa-chart-bar"></i> Power BI</span>
+                            <span class="skill-pill"><i class="fas fa-chart-line"></i> Google Analytics</span>
+                            <span class="skill-pill"><i class="fas fa-file-excel"></i> Excel</span>
+                            <span class="skill-pill"><i class="fas fa-search"></i> SEO</span>
+                        </div>
                     </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fas fa-search"></i> SEO
+
+                    <!-- Development -->
+                    <div class="skill-category" data-aos="fade-up" data-aos-delay="200">
+                        <span class="skill-category-label">Development</span>
+                        <div class="skill-row">
+                            <span class="skill-pill"><i class="fab fa-python"></i> Python</span>
+                            <span class="skill-pill"><i class="fab fa-js"></i> JavaScript</span>
+                            <span class="skill-pill"><i class="fab fa-node-js"></i> Node.js</span>
+                            <span class="skill-pill"><i class="fab fa-react"></i> Next.js</span>
+                            <span class="skill-pill"><i class="fas fa-plug"></i> API Integration</span>
+                            <span class="skill-pill"><i class="fas fa-database"></i> Databases</span>
+                            <span class="skill-pill"><i class="fab fa-microsoft"></i> Azure</span>
+                        </div>
                     </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="300">
-                        <i class="fab fa-python"></i> Python
+
+                    <!-- Marketing & Operations -->
+                    <div class="skill-category" data-aos="fade-up" data-aos-delay="300">
+                        <span class="skill-category-label">Marketing &amp; Operations</span>
+                        <div class="skill-row">
+                            <span class="skill-pill"><i class="fab fa-mailchimp"></i> Mailchimp</span>
+                            <span class="skill-pill"><i class="fas fa-globe"></i> Domain Management</span>
+                            <span class="skill-pill"><i class="fab fa-shopify"></i> CMS Platforms</span>
+                            <span class="skill-pill"><i class="fas fa-tasks"></i> Project Management</span>
+                        </div>
                     </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="400">
-                        <i class="fab fa-node-js"></i> Node.js
+
+                    <!-- Soft Skills -->
+                    <div class="skill-category" data-aos="fade-up" data-aos-delay="400">
+                        <span class="skill-category-label">Soft Skills</span>
+                        <div class="skill-row">
+                            <span class="skill-pill"><i class="fas fa-bolt"></i> Ease in Software Learning</span>
+                            <span class="skill-pill"><i class="fas fa-brain"></i> Analytical Thinking</span>
+                            <span class="skill-pill"><i class="fas fa-comments"></i> Communication</span>
+                            <span class="skill-pill"><i class="fas fa-handshake"></i> Interpersonal Skills</span>
+                            <span class="skill-pill"><i class="fas fa-hourglass-half"></i> Patience</span>
+                        </div>
                     </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="500">
-                        <i class="fab fa-js"></i> JavaScript
+
+                    <!-- Languages -->
+                    <div class="skill-category" data-aos="fade-up" data-aos-delay="500">
+                        <span class="skill-category-label">Languages</span>
+                        <div class="languages-grid">
+
+                            <div class="lang-item">
+                                <div class="lang-header">
+                                    <span class="lang-name">Portuguese</span>
+                                    <span class="lang-level">Native</span>
+                                </div>
+                                <div class="lang-bar"><div class="lang-fill" style="--fill: 100%; --delay: 0.1s"></div></div>
+                            </div>
+
+                            <div class="lang-item">
+                                <div class="lang-header">
+                                    <span class="lang-name">English</span>
+                                    <span class="lang-level">C2 · IELTS</span>
+                                </div>
+                                <div class="lang-bar"><div class="lang-fill" style="--fill: 95%; --delay: 0.2s"></div></div>
+                            </div>
+
+                            <div class="lang-item">
+                                <div class="lang-header">
+                                    <span class="lang-name">Spanish</span>
+                                    <span class="lang-level">B2</span>
+                                </div>
+                                <div class="lang-bar"><div class="lang-fill" style="--fill: 65%; --delay: 0.3s"></div></div>
+                            </div>
+
+                            <div class="lang-item">
+                                <div class="lang-header">
+                                    <span class="lang-name">Italian</span>
+                                    <span class="lang-level">A2</span>
+                                </div>
+                                <div class="lang-bar"><div class="lang-fill" style="--fill: 25%; --delay: 0.4s"></div></div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="600">
-                        <i class="fab fa-angular"></i> Angular
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="700">
-                        <i class="fab fa-react"></i> Next.js
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="800">
-                        <i class="fas fa-database"></i> MongoDB Postgres
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="900">
-                        <i class="fab fa-microsoft"></i> Azure
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1000">
-                        <i class="fas fa-chart-bar"></i> Tableau PowerBI
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1100">
-                        <i class="fas fa-file-excel"></i> Excel
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1200">
-                        <i class="fas fa-chart-line"></i> Google Analytics
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1300">
-                        <i class="fas fa-database"></i> Access
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1400">
-                        <i class="fas fa-chart-pie"></i> IBM SPSS
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1500">
-                        <i class="fas fa-database"></i> SQL
-                    </div>
-                    <div class="skill-item" data-aos="fade-up" data-aos-delay="1600">
-                        <i class="fas fa-tasks"></i> Project Management
-                    </div>
-                 </div>
+
+                </div>
             </div>
         </section>
+
         <section id="contact" class="contact">
             <div class="container">
                 <h2 data-aos="fade-up">Contact Me</h2>
@@ -181,8 +217,7 @@
                         data-aos-delay="100" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-linkedin"></i> LinkedIn
                     </a>
-                    <a href="mailto:pedropapp15@gmail.com" class="contact-item" data-aos="fade-up" data-aos-delay="200"
-                        target="_blank" rel="noopener noreferrer">
+                    <a href="/cdn-cgi/l/email-protection#aedecbcadcc1decfdede9f9beec9c3cfc7c280cdc1c3" class="contact-item" data-aos="fade-up" data-aos-delay="200" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-envelope"></i> Email
                     </a>
                     <a href="https://github.com/pedropapp" class="contact-item" data-aos="fade-up" data-aos-delay="300"
@@ -191,7 +226,7 @@
                     </a>
                     <a href="/assets/CV_PedroPapp.pdf" class="contact-item" data-aos="fade-up" data-aos-delay="400"
                         target="_blank" rel="noopener noreferrer">
-                        <i class="fa fa-user"></i> CV (old)
+                        <i class="fa fa-user"></i> CV
                     </a>
                 </div>
             </div>
@@ -201,6 +236,6 @@
     <footer>
         <p>&copy; 2026 Pedro Papp</p>
     </footer>
-</body>
 
-</html>
+</body>
+</html> 

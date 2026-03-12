@@ -8,6 +8,108 @@ if (hamburger && navLinks) {
   hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
 }
 
+// ─── Language bars — animate on scroll into view ──────────────────────────────
+const langObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.lang-fill').forEach(bar => {
+        bar.style.animationPlayState = 'running';
+      });
+      langObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const langSection = document.querySelector('.languages-grid');
+  if (langSection) {
+    langSection.querySelectorAll('.lang-fill').forEach(bar => {
+      bar.style.animationPlayState = 'paused';
+    });
+    langObserver.observe(langSection);
+  }
+});
+
+// ─── Scroll nudge ─────────────────────────────────────────────────────────────
+// NOTE: script tag uses `defer`, so by the time this runs the DOM is ready and
+// DOMContentLoaded has already fired — so we run this directly, no wrapper needed.
+(function () {
+  // Desktop only, once per session
+  if (window.innerWidth <= 768 || 'ontouchstart' in window) return;
+
+  let nudgeTimer     = null;
+  let nudgeDone      = false;
+  let animating      = false;
+  let cancelAnim     = false;
+  let isProgrammatic = false;
+
+  function easeInOutQuint(t) {
+    return t < 0.5
+      ? 16 * t * t * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 5) / 2;
+  }
+
+  function smoothScrollTo(targetY, duration) {
+    return new Promise(function (resolve) {
+      const startY = window.scrollY;
+      const delta  = targetY - startY;
+      const start  = performance.now();
+
+      function tick(now) {
+        if (cancelAnim) { resolve(); return; }
+        const t = Math.min((now - start) / duration, 1);
+        isProgrammatic = true;
+        window.scrollTo(0, startY + delta * easeInOutQuint(t));
+        isProgrammatic = false;
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          resolve();
+        }
+      }
+
+      requestAnimationFrame(tick);
+    });
+  }
+
+  async function runNudge() {
+    nudgeDone  = true;
+    animating  = true;
+    cancelAnim = false;
+
+    // Slow drift down
+    await smoothScrollTo(280, 2200);
+    if (cancelAnim) { animating = false; return; }
+
+    // Ease back up, overshoot to 40px
+    await smoothScrollTo(40, 1400);
+    if (cancelAnim) { animating = false; return; }
+
+    // Settle gently to 0
+    await smoothScrollTo(0, 1000);
+
+    animating = false;
+  }
+
+  function startTimer() {
+    clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function () {
+      if (!nudgeDone && window.scrollY === 0) runNudge();
+    }, 4000);
+  }
+
+  window.addEventListener('scroll', function () {
+    if (isProgrammatic) return;
+    if (animating) {
+      cancelAnim = true;
+      animating  = false;
+    }
+    clearTimeout(nudgeTimer);
+  }, { passive: true });
+
+  startTimer();
+})();
+
 // ─── Versor (SLERP quaternion interpolation) ──────────────────────────────────
 class Versor {
   static fromAngles([l, p, g]) {
@@ -59,11 +161,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('.about-map');
   if (!container) return;
 
-  const width  = container.clientWidth  || 500;
-  const height = container.clientHeight || 500;
+  const isMobile = window.innerWidth <= 768;
+  const maxSize  = isMobile ? Math.min(window.innerWidth * 0.88, 360) : null;
+
+  const width  = maxSize || container.clientWidth  || 500;
+  const height = maxSize || container.clientHeight || 500;
   const scale  = Math.min(width, height) / 2.2;
 
-  // Cities — [longitude, latitude]
   const cities = [
     { name: 'Curitiba', coords: [-49.2671, -25.4290], country: 'Brazil',
       comment: 'Where I grew up and developed a solid foundation seeking knowledge, creativity, and environmental awareness.' },
@@ -77,10 +181,8 @@ document.addEventListener('DOMContentLoaded', function () {
       comment: 'Finished my studies at McGill University. Worked with prompt engineering and grew my web development skills.' },
   ];
 
-  // world-atlas@1 stores numeric IDs — NOT name strings
   const countryIds = { 'Brazil': 76, 'United Kingdom': 826, 'Portugal': 620, 'Germany': 276, 'Canada': 124 };
 
-  // ── Projection ────────────────────────────────────────────────────────────
   const projection = d3.geoOrthographic()
     .scale(scale)
     .translate([width / 2, height / 2])
@@ -89,11 +191,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const geoPath = d3.geoPath().projection(projection);
 
-  // ── SVG scaffold ──────────────────────────────────────────────────────────
   const svg = d3.select('.about-map')
     .append('svg')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    .style('display', 'block')
+    .style('margin', '0 auto');
 
   const defs      = svg.append('defs');
   const oceanGrad = defs.append('radialGradient').attr('id', 'oceanGrad')
@@ -124,90 +227,63 @@ document.addEventListener('DOMContentLoaded', function () {
     flightGroup.selectAll('path').attr('d', geoPath);
   }
 
-  // ── Country highlight ─────────────────────────────────────────────────────
   function highlightCountry(name) {
     const id = countryIds[name];
     landGroup.selectAll('.country')
       .transition('hl').duration(400)
-      .attr('fill',         d => +d.id === id ? '#66bb6a' : '#3a8a3a')
-      .attr('stroke',       d => +d.id === id ? '#fff'    : '#1a5c1a')
-      .attr('stroke-width', d => +d.id === id ? 0.8       : 0.3);
+      .attr('fill', d => +d.id === id ? '#66bb6a' : '#3a8a3a');
   }
 
   function resetHighlight() {
     landGroup.selectAll('.country')
       .transition('hl').duration(400)
-      .attr('fill', '#3a8a3a').attr('stroke', '#1a5c1a').attr('stroke-width', 0.3);
+      .attr('fill', '#3a8a3a');
   }
 
-  // ── City info ─────────────────────────────────────────────────────────────
+  let cityInfoReady = false;
+
   function showCityInfo(city) {
-    if (window.innerWidth < 768) return;
     const panel = d3.select('#city-info');
-    panel.interrupt('info').transition('info').duration(250).style('opacity', 0).on('end', function () {
-      d3.select(this)
-        .html('<h3>' + city.name + ', ' + city.country + '</h3><p>' + city.comment + '</p>')
+    const html  = '<h3>' + city.name + ', ' + city.country + '</h3><p>' + city.comment + '</p>';
+    if (!cityInfoReady) {
+      cityInfoReady = true;
+      panel.interrupt('info').html(html)
         .transition('info').duration(500).style('opacity', 1);
-    });
+    } else {
+      panel.interrupt('info')
+        .transition('info').duration(200).style('opacity', 0)
+        .on('end', function () {
+          d3.select(this).html(html)
+            .transition('info').duration(500).style('opacity', 1);
+        });
+    }
   }
 
   function hideCityInfo() {
-    d3.select('#city-info').interrupt('info').transition('info').duration(250).style('opacity', 0);
+    d3.select('#city-info').interrupt('info')
+      .transition('info').duration(250).style('opacity', 0);
   }
 
-  // ── Pin ───────────────────────────────────────────────────────────────────
   function createPin(city) {
     const pt = projection(city.coords);
     if (!pt) return null;
-
-    // All geometry is in local space where (0,0) = the exact city coordinate on the globe.
-    // The pin tip touches (0,0); the body extends upward.
-    //
-    // Modern teardrop dimensions:
-    //   Bulge radius : 11px   centre at (0, -22)
-    //   Tip          : (0,  0)  ← lands exactly on the projected point
-    //   Total height : ~33px
-    //
-    // Path constructed with cubic beziers so the sides curve naturally
-    // into the tip, matching the Google Maps / modern pin aesthetic.
-    const R  = 11;   // bulge radius
-    const CY = -22;  // bulge centre y  (negative = upward in SVG)
-
-    // Teardrop path: start at tip (0,0), curve up left side to top, arc across, curve back down to tip
+    const R  = 11;
+    const CY = -22;
     const pinD = [
       'M 0,0',
-      'C -6,-8  -' + R + ',' + (CY + R * 0.6) + '  -' + R + ',' + CY,   // left curve from tip to bulge left
-      'A ' + R + ',' + R + ' 0 1,1 ' + R + ',' + CY,                      // arc across the top of the bulge
-      'C ' + R + ',' + (CY + R * 0.6) + '  6,-8  0,0',                    // right curve from bulge right back to tip
+      'C -6,-8  -' + R + ',' + (CY + R * 0.6) + '  -' + R + ',' + CY,
+      'A ' + R + ',' + R + ' 0 1,1 ' + R + ',' + CY,
+      'C ' + R + ',' + (CY + R * 0.6) + '  6,-8  0,0',
       'Z'
     ].join(' ');
-
     const g = pinGroup.append('g')
       .attr('class', 'city-pin')
-      .attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ')')
+      .attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') scale(0.55)')
       .style('opacity', 0);
-
-    // Pin body
-    g.append('path')
-      .attr('d', pinD)
-      .style('fill', '#EF4444')
-      .style('stroke', '#B91C1C')
-      .style('stroke-width', 1);
-
-    // Subtle shine on the bulge
-    g.append('circle')
-      .attr('cx', -4).attr('cy', CY - 4)
-      .attr('r', 4)
-      .style('fill', 'rgba(255,255,255,0.25)');
-
-    // White inner dot at bulge centre
-    g.append('circle')
-      .attr('cx', 0).attr('cy', CY)
-      .attr('r', 4.5)
-      .style('fill', '#fff');
-
+    g.append('path').attr('d', pinD).style('fill', '#EF4444').style('stroke', '#B91C1C').style('stroke-width', 1);
+    g.append('circle').attr('cx', -4).attr('cy', CY - 4).attr('r', 4).style('fill', 'rgba(255,255,255,0.25)');
+    g.append('circle').attr('cx', 0).attr('cy', CY).attr('r', 4.5).style('fill', '#fff');
     g.transition('pin-fade').duration(400).style('opacity', 1);
-
     g._remove = function () {
       g.interrupt('pin-fade').transition('pin-fade').duration(400).style('opacity', 0)
         .on('end', function () { d3.select(this).remove(); });
@@ -215,75 +291,60 @@ document.addEventListener('DOMContentLoaded', function () {
     return g;
   }
 
-  // ── Plane (original image asset) ─────────────────────────────────────────
   function createPlane() {
     const g = planeGroup.append('g').style('opacity', 0);
-    g.append('image')
+    const inner = g.append('g').attr('transform', 'scale(0.55)');
+    inner.append('image')
       .attr('href', 'assets/White_plane_icon.svg.png')
-      .attr('width', 30)
-      .attr('height', 30)
-      .attr('x', -15)
-      .attr('y', -15);
+      .attr('width', 30).attr('height', 30).attr('x', -15).attr('y', -15);
     return g;
   }
 
-  // ── Globe rotation via named transition ───────────────────────────────────
   function rotateTo(coords, duration) {
     return new Promise(function (resolve) {
       const current = projection.rotate();
       const target  = [-coords[0], -coords[1], 0];
       const interp  = Versor.interpolateAngles(current, target);
-
       d3.transition('globe-rotate')
-        .duration(duration)
-        .ease(d3.easeCubicInOut)
+        .duration(duration).ease(d3.easeCubicInOut)
         .tween('rotate', function () {
-          return function (t) {
-            projection.rotate(interp(t));
-            redraw();
-          };
+          return function (t) { projection.rotate(interp(t)); redraw(); };
         })
-        .on('end',      function () { resolve(); })
-        .on('interrupt',function () { resolve(); }); // never deadlock
+        .on('end', function () { resolve(); })
+        .on('interrupt', function () { resolve(); });
     });
   }
 
-  // ── Flight animation via rAF (immune to d3 transition cancellation) ───────
   function animateFlight(fromCoords, toCoords, duration) {
     return new Promise(function (resolve) {
       const arcDatum = { type: 'LineString', coordinates: [fromCoords, toCoords] };
       const arcPath  = flightGroup.append('path')
-        .datum(arcDatum)
-        .attr('d', geoPath)
-        .attr('fill', 'none')
-        .attr('stroke', 'rgba(255,255,255,0.55)')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '5,4')
-        .style('opacity', 0);
-
+        .datum(arcDatum).attr('d', geoPath)
+        .attr('fill', 'none').attr('stroke', 'rgba(255,255,255,0.55)')
+        .attr('stroke-width', 1.5).attr('stroke-dasharray', '5,4').style('opacity', 0);
       arcPath.transition('arc-in').duration(300).style('opacity', 1);
 
       const plane     = createPlane().style('opacity', 1);
       const geoInterp = d3.geoInterpolate(fromCoords, toCoords);
+      const rotFrom   = Versor.fromAngles([-fromCoords[0], -fromCoords[1], 0]);
+      const rotTo     = Versor.fromAngles([-toCoords[0], -toCoords[1], 0]);
+      const rotInterp = Versor.interpolate(rotFrom, rotTo);
       const startTime = performance.now();
+      let lastAngle   = 0;
 
       function tick() {
         const t      = Math.min((performance.now() - startTime) / duration, 1);
-        const coords = geoInterp(t);
+        const easedT = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        projection.rotate(Versor.toAngles(rotInterp(easedT)));
+        redraw();
+        const coords = geoInterp(easedT);
         const pt     = projection(coords);
-
-        if (pt) {
-          const nCoords = geoInterp(Math.min(t + 0.01, 1));
-          const nPt     = projection(nCoords);
-          const angle   = nPt
-            ? Math.atan2(nPt[1] - pt[1], nPt[0] - pt[0]) * 180 / Math.PI
-            : 0;
-          plane.attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') rotate(' + angle + ')');
+        if (pt && t < 1) {
+          const nPt = projection(geoInterp(Math.min(easedT + 0.01, 0.999)));
+          if (nPt) lastAngle = Math.atan2(nPt[1] - pt[1], nPt[0] - pt[0]) * 180 / Math.PI;
+          plane.attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') rotate(' + lastAngle + ')');
         }
-
-        // Redraw arc continuously as globe rotates beneath it
         arcPath.attr('d', geoPath);
-
         if (t < 1) {
           requestAnimationFrame(tick);
         } else {
@@ -293,76 +354,45 @@ document.addEventListener('DOMContentLoaded', function () {
             .on('end', function () { d3.select(this).remove(); resolve(); });
         }
       }
-
       requestAnimationFrame(tick);
     });
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
   function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ── Tour loop ─────────────────────────────────────────────────────────────
   async function runTour() {
     while (true) {
       for (let i = 0; i < cities.length; i++) {
         const city = cities[i];
-
-        await rotateTo(city.coords, i === 0 ? 1200 : 2400);
-
+        if (i === 0) await rotateTo(city.coords, 1400);
         highlightCountry(city.country);
         const pin = createPin(city);
         showCityInfo(city);
-
-        await wait(3500);
-
+        await wait(5500);
+        if (pin) pin._remove();
+        hideCityInfo();
+        resetHighlight();
+        await wait(300);
         if (i < cities.length - 1) {
-          const next   = cities[i + 1];
-          const midLon = (city.coords[0] + next.coords[0]) / 2;
-          const midLat = (city.coords[1] + next.coords[1]) / 2;
-
-          if (pin) pin._remove();
-          hideCityInfo();
-          resetHighlight();
-          await wait(400);
-
-          // Fly + pan globe simultaneously
-          await Promise.all([
-            animateFlight(city.coords, next.coords, 2800),
-            rotateTo([midLon, midLat], 2800),
-          ]);
-
-          await wait(300);
+          await animateFlight(city.coords, cities[i + 1].coords, 3200);
+          await wait(200);
         } else {
-          if (pin) pin._remove();
-          hideCityInfo();
-          resetHighlight();
-          await wait(1200);
+          await wait(800);
         }
       }
-      await wait(500);
+      await wait(400);
     }
   }
 
-  // ── Load world data then start ────────────────────────────────────────────
   d3.json('https://unpkg.com/world-atlas@1/world/110m.json').then(function (world) {
     const countries = topojson.feature(world, world.objects.countries);
-
     landGroup.selectAll('.country')
-      .data(countries.features)
-      .enter().append('path')
-      .attr('class', 'country')
-      .attr('d', geoPath)
-      .attr('fill', '#3a8a3a')
-      .attr('stroke', '#1a5c1a')
-      .attr('stroke-width', 0.3);
-
+      .data(countries.features).enter().append('path')
+      .attr('class', 'country').attr('d', geoPath)
+      .attr('fill', '#3a8a3a').attr('stroke', '#1a5c1a').attr('stroke-width', 0.3);
     runTour();
-  }).catch(function (err) {
-    console.error('Failed to load world atlas:', err);
-  });
+  }).catch(function (err) { console.error('Failed to load world atlas:', err); });
 
   d3.select('.about-map')
-    .on('wheel.zoom', null)
-    .on('mousedown.drag', null)
-    .on('touchstart.drag', null);
+    .on('wheel.zoom', null).on('mousedown.drag', null).on('touchstart.drag', null);
 });
