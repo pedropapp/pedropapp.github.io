@@ -179,9 +179,18 @@ document.addEventListener('DOMContentLoaded', function () {
       comment: 'Continued my studies in Germany, working on projects focused on sustainability and social impact.' },
     { name: 'Montreal', coords: [-73.5673, 45.5017],  country: 'Canada',
       comment: 'Finished my studies at McGill University. Worked with prompt engineering and grew my web development skills.' },
+    { name: 'Aarhus',   coords: [10.2039,  56.1629],  country: 'Denmark',
+      comment: 'Moved to Aarhus to pursue a master\'s degree in Data Science.' },
   ];
 
-  const countryIds = { 'Brazil': 76, 'United Kingdom': 826, 'Portugal': 620, 'Germany': 276, 'Canada': 124 };
+  const countryIds = {
+    'Brazil': 76,
+    'United Kingdom': 826,
+    'Portugal': 620,
+    'Germany': 276,
+    'Canada': 124,
+    'Denmark': 208,
+  };
 
   const projection = d3.geoOrthographic()
     .scale(scale)
@@ -330,7 +339,20 @@ document.addEventListener('DOMContentLoaded', function () {
       const rotTo     = Versor.fromAngles([-toCoords[0], -toCoords[1], 0]);
       const rotInterp = Versor.interpolate(rotFrom, rotTo);
       const startTime = performance.now();
-      let lastAngle   = 0;
+      let angleLocked = false;
+
+      // Initialise heading from the actual t=0 geometry so the plane never
+      // starts pointing the wrong way and has to lerp into the right direction.
+      const pt0 = projection(geoInterp(0));
+      const pt1 = projection(geoInterp(0.015));
+      let lastAngle = (pt0 && pt1)
+        ? Math.atan2(pt1[1] - pt0[1], pt1[0] - pt0[0]) * 180 / Math.PI
+        : 0;
+
+      function shortestAngleDiff(from, to) {
+        let diff = (to - from + 540) % 360 - 180;
+        return diff;
+      }
 
       function tick() {
         const t      = Math.min((performance.now() - startTime) / duration, 1);
@@ -339,10 +361,24 @@ document.addEventListener('DOMContentLoaded', function () {
         redraw();
         const coords = geoInterp(easedT);
         const pt     = projection(coords);
-        if (pt && t < 1) {
-          const nPt = projection(geoInterp(Math.min(easedT + 0.01, 0.999)));
-          if (nPt) lastAngle = Math.atan2(nPt[1] - pt[1], nPt[0] - pt[0]) * 180 / Math.PI;
-          plane.attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') rotate(' + lastAngle + ')');
+        if (pt) {
+          if (!angleLocked) {
+            const lookT  = Math.min(easedT + 0.015, 0.95);
+            const nPt    = projection(geoInterp(lookT));
+            if (nPt) {
+              const rawAngle = Math.atan2(nPt[1] - pt[1], nPt[0] - pt[0]) * 180 / Math.PI;
+              // Clamp to shortest-path rotation to suppress sudden flips
+              const diff = shortestAngleDiff(lastAngle, rawAngle);
+              if (Math.abs(diff) < 90) {
+                lastAngle += diff * 0.35; // gentle lerp toward new heading
+              }
+            }
+            // Lock heading for the final stretch
+            if (t >= 0.85) angleLocked = true;
+          }
+          if (t < 1) {
+            plane.attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ') rotate(' + lastAngle + ')');
+          }
         }
         arcPath.attr('d', geoPath);
         if (t < 1) {
