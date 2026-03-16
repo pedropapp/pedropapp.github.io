@@ -57,7 +57,7 @@ h1 {
   margin: 0;
   letter-spacing: -0.5px;
   /* Subtle gradient on the title */
-  background: linear-gradient(135deg, #FF6B4A 0%, #FF3322 25%, #E50914 55%, #A60010 80%, #6B0009 100%);
+  background: linear-gradient(135deg, #FF3322 0%, #E50914 50%, #A60010 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -156,10 +156,12 @@ header::before {
 .row1 > div::before, .row2 > div::before, .row3 > div::before, .row4 > div::before {
   content: '';
   position: absolute;
-  top: 0; left: 0;
-  width: 40px; height: 2px;
-  background: linear-gradient(90deg, var(--red), transparent);
-  border-radius: var(--radius-lg) 0 0 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
   opacity: 0.6;
 }
 

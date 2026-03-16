@@ -289,7 +289,7 @@ function createWorldMap(data, selector, countryField, valueField) {
             const detailsDiv = container.append("div")
                 .attr("class", "country-details")
                 .style("position", "absolute")
-                .style("top", "10px")
+                .style("top", "25px")
                 .style("left", "10px")
                 .style("padding", "10px")
                 .style("border-radius", "5px")
