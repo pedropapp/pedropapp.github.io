@@ -27,7 +27,6 @@
 }
 
 /* ── Reset & Base ── */
-*, *::before, *::after { box-sizing: border-box; }
 
 body {
   background-color: var(--bg-base);
@@ -38,9 +37,8 @@ body {
   /* Subtle noise texture for depth */
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(229,9,20,0.06) 0%, transparent 70%);
-  min-height: 100vh;
+  min-height: 100%;
 }
-
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -579,7 +577,7 @@ footer {
   background: rgba(0,0,0,0.8);
   color: var(--text-muted);
   padding: 20px 28px;
-  margin-top: 48px;
+  padding-top: 48px;
   border-top: 1px solid var(--border);
 }
 
