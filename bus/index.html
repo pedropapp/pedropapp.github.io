@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Næste afgang — Pedro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=B612+Mono:ital,wght@0,400;0,700;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bus.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ── Sidebar (left) ── -->
+  <div class="sidebar">
+
+    <div class="sidebar-head">
+      <span class="sidebar-wordmark">Bus Departures
+      </span>
+      <span class="sidebar-status" id="sidebar-status">—</span>
+      <button class="gear-btn" onclick="toggleSettings()" title="Settings">⚙</button>
+    </div>
+
+    <div class="board-scroll" id="board">
+      <div style="font-size:9px;color:var(--ink4);padding:20px 0;text-align:center;line-height:2.2;letter-spacing:0.12em;text-transform:uppercase;">
+        set your address<br>via ⚙ above
+      </div>
+    </div>
+
+    <div class="sidebar-footer" id="footer-bar" style="display:none">
+      <span><span class="rt-dot"></span> live</span>
+      <span class="req-badge" id="req-badge">0 / 45,000</span>
+      <button class="btn-ghost" onclick="refresh()">↻</button>
+    </div>
+
+  </div>
+
+  <!-- ── Main area (right) ── -->
+  <div class="main-area">
+
+    <!-- Empty state -->
+    <div class="empty-main" id="empty-main">
+      <div class="big-icon">🚌</div>
+      click a departure to track it
+    </div>
+
+    <!-- Focus panel -->
+    <div class="focus-panel" id="focus-panel">
+
+      <!-- Header -->
+      <div class="focus-header">
+        <div class="focus-line-name" id="focus-line-name">—</div>
+        <div class="focus-dir" id="focus-dir"></div>
+      </div>
+
+      <!-- Countdown -->
+      <div class="focus-num" id="focus-num">—</div>
+      <div class="focus-unit" id="focus-unit">minutes</div>
+
+      <!-- Multi-bus tracker -->
+      <div class="tracker-section">
+        <div class="tracker-meta">
+          <span class="tracker-meta-line" id="tracker-meta-line">all departures</span>
+          <span class="tracker-meta-window">−8 min &nbsp;·&nbsp; now &nbsp;·&nbsp; +30 min</span>
+        </div>
+
+        <div class="tracker-track" id="tracker-track">
+          <!-- past zone -->
+          <div class="tracker-past-zone" id="tracker-past-zone" style="width:21%"></div>
+          <!-- now line -->
+          <div class="tracker-now-line" id="tracker-now-line" style="left:21%">
+            <div class="tracker-now-label">you</div>
+          </div>
+          <!-- bus dots injected by JS -->
+        </div>
+
+        <div class="tracker-ticks" id="tracker-ticks"></div>
+      </div>
+
+      <!-- Next buses -->
+      <div class="next-buses" id="next-buses"></div>
+
+    </div>
+
+    <!-- Alert overlay -->
+    <div class="alert-overlay" id="alert-overlay">
+      <div class="alert-box">
+        <span class="alert-emoji">🚨</span>
+        <strong id="alert-title">Leave now!</strong>
+        <p id="alert-sub">Bus departing soon</p>
+        <button onclick="dismissAlert()">Got it</button>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+
+</div><!-- /app-shell -->
+
+<!-- ── Settings popover ── -->
+<div class="settings-wrap" id="settings-wrap">
+  <div class="settings-backdrop" onclick="closeSettings()"></div>
+  <div class="settings-popover">
+
+    <div class="popover-title">Settings</div>
+
+    <div class="field">
+      <label>Your address</label>
+      <input class="address-input" id="address-input" type="text"
+        placeholder="e.g. Vesterbrogade 12, KBH">
+    </div>
+
+    <div class="field">
+      <label>Walk time to stop</label>
+      <div class="walk-row">
+        <input type="range" id="walk-slider" min="1" max="15" value="5"
+          oninput="updateWalkLabel(this.value)">
+        <span class="walk-val" id="walk-val">5 min</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Run buffer (extra time if you sprint)</label>
+      <div class="run-row">
+        <input type="range" id="run-slider" min="0" max="5" value="2"
+          oninput="updateRunLabel(this.value)">
+        <span class="run-val" id="run-val">2 min</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="search-btn" onclick="handleSearch()">Find stops</button>
+
+    <div id="stop-picker-section" style="display:none; margin-top:12px;">
+      <div class="field">
+        <label>Which stops</label>
+        <div class="stop-picker visible" id="stop-picker"></div>
+      </div>
+    </div>
+
+    <div id="notif-section" style="display:none">
+      <button class="notif-btn" onclick="requestNotifPermission()">
+        🔔 Enable "leave now" notifications
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="bus.js?v=7"></script>
+</body>
+</html>
