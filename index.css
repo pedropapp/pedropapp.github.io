@@ -587,6 +587,12 @@ footer {
     text-align: center;
     margin-top: 0.75rem;
   }
+#spline-viewer {
+  pointer-events: none;
+}
+header {
+  padding: 1.5rem 2rem;
+}
 }
 
 @media (max-width: 768px) {

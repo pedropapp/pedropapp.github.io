@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[YOUR AGENCY NAME] — Web Development Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="agency.css">
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">[YOUR AGENCY NAME]</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="section-label">Web development agency</p>
+  <h1 class="hero-headline">We build websites <em>that do the work</em> for your business</h1>
+  <p class="hero-tagline">[YOUR TAGLINE] — fast, focused, built to convert.</p>
+  <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+    <a href="#contact" class="btn btn-primary">Start a project →</a>
+    <a href="#work" class="btn btn-outline">See our work</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">About</p>
+  <p class="about-text">
+    We're a small web development agency that works closely with founders and growing businesses to ship fast, high-quality websites and digital products. No bloated teams — just sharp execution on what matters.
+    Every project is owned end-to-end: strategy, design, development, and launch. We care about results as much as you do.
+  </p>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-label">Services</p>
+  <p style="color:var(--muted);font-size:14px;max-width:480px;">What we offer today, and what's coming next.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="badge badge-active">Available</span>
+      <div class="service-icon">⬡</div>
+      <div class="service-title">Web Development</div>
+      <p class="service-desc">Custom websites, landing pages, and web apps — built for speed, SEO, and conversion. From quick marketing sites to full product builds.</p>
+    </div>
+
+    <div class="service-card coming-soon">
+      <span class="badge badge-soon">Coming soon</span>
+      <div class="service-icon">◈</div>
+      <div class="service-title">Google Ads</div>
+      <p class="service-desc">Performance campaigns that put your business in front of the right people, at the right moment.</p>
+    </div>
+
+    <div class="service-card coming-soon">
+      <span class="badge badge-soon">Coming soon</span>
+      <div class="service-icon">◉</div>
+      <div class="service-title">Meta Ads</div>
+      <p class="service-desc">Paid social campaigns across Facebook and Instagram, built for awareness and measurable ROI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <p class="section-label">Work</p>
+  <div class="project-card">
+    <h3 class="project-title">[Project Name] — [Client Industry]</h3>
+    <div class="project-block">
+      <p class="project-block-label">The problem</p>
+      <p>[CLIENT] had an outdated website that was losing visitors at a high rate. Leads were dropping off before ever reaching a contact form. Their old site took 8+ seconds to load and wasn't mobile-friendly.</p>
+    </div>
+    <div class="project-block">
+      <p class="project-block-label">What we built</p>
+      <p>A fully redesigned, mobile-first website with a clear messaging hierarchy, streamlined contact flow, and a load time under 1.2 seconds. Built on [stack], deployed on [platform].</p>
+    </div>
+    <div class="project-block">
+      <p class="project-block-label">The outcome</p>
+      <p>Bounce rate dropped 40%. Form submissions doubled within the first month. [CLIENT] now uses the site as their primary sales tool in pitches and proposals.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section id="testimonial">
+  <p class="section-label">What clients say</p>
+  <div class="testimonial-inner">
+    <p class="testimonial-quote">"[YOUR TESTIMONIAL QUOTE — e.g. Working with them was the best decision we made for our online presence. They delivered beyond what we expected, on time, and with zero stress.]"</p>
+    <p class="testimonial-author"><strong>[Client Name]</strong>, [Title] at [Company]</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">Contact</p>
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h3>Let's work together</h3>
+      <p>Have a project in mind? Tell us what you're building and we'll get back to you within one business day.</p>
+      <a href="mailto:[YOUR EMAIL]" class="contact-email">✉ [YOUR EMAIL]</a>
+    </div>
+    <div>
+      <form id="contact-form">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Your name" required>
+          <input type="email" name="email" placeholder="Email address" required>
+        </div>
+        <input type="text" name="subject" placeholder="Project type (e.g. new website, redesign)">
+        <textarea name="message" placeholder="Tell us about your project..." rows="5" required></textarea>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Send message →</button>
+        <p class="form-msg" id="form-msg"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 [YOUR AGENCY NAME]</span>
+  <ul class="footer-nav">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script src="agency.js"></script>
+</body>
+</html>

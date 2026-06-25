@@ -5,7 +5,16 @@ AOS.init({ duration: 1000, once: true });
 const hamburger = document.querySelector('.hamburger');
 const navLinks  = document.querySelector('.nav-links');
 if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navLinks.classList.toggle('active');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+      navLinks.classList.remove('active');
+    }
+  });
 }
 
 // ─── Language bars — animate on scroll into view ──────────────────────────────
@@ -180,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
     { name: 'Montreal', coords: [-73.5673, 45.5017],  country: 'Canada',
       comment: 'Finished my studies at McGill University. Worked with prompt engineering and grew my web development skills.' },
     { name: 'Aarhus',   coords: [10.2039,  56.1629],  country: 'Denmark',
-      comment: 'Moved to Aarhus to pursue a master\'s degree in Data Science.' },
+      comment: 'Moved to Aarhus to pursue a master\'s degree in Business Intelligence.' },
   ];
 
   const countryIds = {
